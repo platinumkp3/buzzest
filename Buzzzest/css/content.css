@@ -1,0 +1,87 @@
+/* CSS Document */
+
+#content_post
+{
+	display:block;
+	float:left;
+	/*border: 1px solid #000;
+	border-left:1px solid #000;
+	border-right:1px solid #000;
+	border-bottom:1px solid #000;*/
+	/*margin-left:1%;*/
+	height:100%;
+	width:100%;
+	min-height:600px;
+}
+
+#homemenu
+{
+	display:block;
+	float:left;
+	border-bottom:1px solid #999;
+	width:100%; 
+}
+
+#tableborder 
+{
+	border-bottom:1px solid #999;
+}
+
+#tdborderlefttop
+{
+	border-left:1px solid #999;
+	border-top:1px solid #999;
+	border-right:1px solid #999;
+
+}
+
+#tdbordertop
+{
+
+	border-top:1px solid #999;
+	border-right:1px solid #999;
+	
+}
+
+#tdborderrighttop
+{
+	border-right:1px solid #999;
+	border-top:1px solid #999;
+
+}
+
+#tdborderleftbottom
+{
+	border-left:1px solid #999;
+	border-bottom:1px solid #999;
+	border-right:1px solid #999;
+
+}
+
+#tdborderbottom
+{
+
+	border-bottom:1px solid #999;
+	border-right:1px solid #999;
+	
+}
+
+#tdborderrightbottom
+{
+	border-right:1px solid #999;
+	border-bottom:1px solid #999;
+
+}
+
+#upphoto
+{
+	margin-top:2%;
+	display:block;
+	float:left;
+	margin-left:1%;
+	border-bottom:1px solid #999;
+	width:100%;
+	min-height:50px;
+	height:50%;
+	
+}
