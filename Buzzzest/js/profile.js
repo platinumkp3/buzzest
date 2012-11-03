@@ -116,3 +116,10 @@ function fnUpdatePost()
 
 
 //end of popup image upload
+
+function fnsavecomments(userid,postid) {
+	var a=$('#txtcompost').val();
+	alert(a);
+	alert(userid+postid);
+  
+}

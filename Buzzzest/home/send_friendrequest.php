@@ -2,6 +2,7 @@
 session_start();
 include "../db/common_db.php";
 $linkid=db_connect();
+include "../includes/mail.php";
 
 $uid=$_SESSION['UID'];
 $uname=$_SESSION['UNAME'];
@@ -14,17 +15,12 @@ $data_select=mysql_fetch_array($res_select);
 $frnid=$data_select['UID'];
 $frnemailid=$data_select['UEMAILID'];
 
-$to = "vinay.kp@relyonsoft.com";
-$subject = "My email test.";
-$message = "Hello, how are you?";
 
-$headers = "From: mamtha.sony@relyonsoft.com\r\n";
-$headers .= "Reply-To: mamtha.sony@relyonsoft.com\r\n";
-$headers .= "Return-Path: mamtha.sony@relyonsoft.com\r\n";
-
-if (@mail($to,$subject,$message,$headers) ) 
+	//sending_email($EMAIL_FROM,$EMAIL_TO,$EMAIL_SUBJECT,$MSG_HTML,$MSG_TXT)
+echo $a = sending_email("","vinaykp3@gmail.com","test","testing","testing message");
+if ($a == "")
 {
-   $message_val == 1;
+  echo $message_val == 1;
 }
 else {
    $message_val == 0;
@@ -39,7 +35,7 @@ if ($message_val == 1)
 {
 	$insert="insert into friends(UID,FRIENDID,FSTATUS,FDATE,FTIME,MAILSTATUS) values('".$uid."','".$frnid."','0',
 		'".$curdate."','".$curtime."','".$message_val."')";
-		$res_insert=mysql_query($insert,$linkid);
+		//$res_insert=mysql_query($insert,$linkid);
 }
 if ($message_val == 0)
 {

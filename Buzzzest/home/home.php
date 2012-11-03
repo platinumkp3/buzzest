@@ -113,11 +113,11 @@ Anything to share?
 <textarea name="share" id="share" rows="3" cols="60"  autofocus="autofocus" ></textarea>
 </form>
 </div>	
-<div id="homemenu">
-<a href="#" onclick="fnchangehomediv('content_post')"; >Updates</a>&nbsp;&nbsp;
-<a href="#" onclick="fnchangehomediv('list')"; >List</a>&nbsp;&nbsp;
-<a href="#" onclick="fnchangehomediv('friends')"; >Friends</a>&nbsp;&nbsp;
-<a href="#" onclick="fnchangehomediv('following')"; >Following</a>
+<div>
+<a href="#" onclick="fnchangehomediv('content_post')" >Updates</a>&nbsp;&nbsp;
+<a href="#" onclick="fnchangehomediv('list')" >List</a>&nbsp;&nbsp;
+<a href="#" onclick="fnchangehomediv('friends')" >Friends</a>&nbsp;&nbsp;
+<a href="#" onclick="fnchangehomediv('following')" >Following</a>
 </div>
 <div id="content_post">
 <table width="100%" height="100%" cellpadding="0" cellspacing="0" id="tableborder" >

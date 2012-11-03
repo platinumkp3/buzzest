@@ -49,7 +49,7 @@ function date_diff($start, $end="NOW")
                 $presec = '0.'.$min[1];
                 $sec = $presec*60;
                 
-                $timeshift = $preday[0].' days ago';
+                $timeshift = $preday[0].' day\'s ago';
 
         }
 		elseif($time>=2678400 && $time <= 32140799) {
@@ -70,7 +70,7 @@ function date_diff($start, $end="NOW")
                 $presec = '0.'.$min[1];
                 $sec = $presec*60;
                 
-                $timeshift = $premonth[0].' months ago';
+                $timeshift = $premonth[0].' month\'s ago';
 
         }
 		elseif($time>=32140800) {
