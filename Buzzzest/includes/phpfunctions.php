@@ -1,6 +1,6 @@
 <?php
-session_start();
-function date_diff($start, $end="NOW")
+
+function date_diffval($start, $end="NOW")
 {
 		 
          $sdate = strtotime($start);
@@ -32,7 +32,7 @@ function date_diff($start, $end="NOW")
                 $presec = '0.'.$min[1];
                 $sec = $presec*60;
 
-                $timeshift = $prehour[0].' hrs '.$min[0].' min '.round($sec,0).' sec ago';
+                $timeshift = $prehour[0].' hr\'s '.$min[0].' min '.round($sec,0).' sec ago';
 
         } elseif($time>=86400 && $time<=2678399 ) {
                 // Days + Hours + Minutes

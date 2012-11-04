@@ -41,6 +41,6 @@ if (isset ($_FILES['myfile'])) {
 // encode with 'urlencode()' the $rezultat and return it in 'onload', inside a BODY tag
 $rezultat = urlencode($rezultat);
 ?>
-<script language="javascript" type="text/javascript">window.top.window.doneloading(<?php echo $result; ?>);</script>
+<script language="javascript" type="text/javascript">window.top.window.doneloading(<?php echo $rezultat; ?>);</script>
 
 

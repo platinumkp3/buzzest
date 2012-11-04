@@ -13,10 +13,8 @@ $curtime=date('Y-m-d H:i:s');
 
 $data=$_POST;
 
-
-
 $txtpost=$data['txtuserpost'];
- $insert ="insert into post(UID,POST,POSTDATE,POSTTIME,PSTATUS) values('".$uid."','".$txtpost."','".date('Y-m-d')."',
+ $insert ="insert into post(UID,POST,POSTDATE,POSTTIME,PSTATUS) values('".$uid."','".htmlspecialchars($txtpost)."','".date('Y-m-d')."',
 			'".$curtime."','1')";
 $result_insert=mysql_query($insert,$linkid);
 echo "Successfully posted!!!";

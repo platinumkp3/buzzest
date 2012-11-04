@@ -5,35 +5,23 @@ $(document).ready(function() {
    $('#info').hide("");	
    $('#qanda').hide("");	
    $('#infoeditdis').hide("");
-  /* $('#content_post').hide("");
-   $("#content_post").css("display","none");*/
-   $("#photos").css("display","none");;
+   $("#photos").css("display","none");
    $("#blogs").css("display","none");
    $("#info").css("display","none");
-   $("#qanda").css("display","none");
+   $("#qanda").css("display","none");   
+   $('#profile_blog').hide("");	
+   $('#viewstories').hide("");	
    $('#infoeditdis').css("display","none");
-   $('#popup-wrapper').css("display","none");	
+   $('#popup-wrapper').css("display","none"); 
+   $('#profile_blog').css("display","none");   
+   $('#viewstories').css("display","none"); 
    $('#content_userpost').load('user_profile_post.php');
    
  });
  
 function fnchangediv(stringval) 
 {
-	if (stringval == "info")
-	{
-	   $('#infoedit').css("display","block");
-	   $('#infoeditdis').css("display","none");
-	   $("#infoedit").load("view_profile.php");
-	}
-	if (stringval == "photos")
-	{
-		$('#gallery').load('gallery.php');
-	}
-	if (stringval == "content_post")
-	{
-		$('#content_userpost').load('user_profile_post.php');
-	}
-   $('#photos').hide("");	
+	$('#photos').hide("");	
    $('#blogs').hide("");	
    $('#info').hide("");	
    $('#qanda').hide("");	
@@ -43,6 +31,35 @@ function fnchangediv(stringval)
    $("#blogs").css("display","none");
    $("#info").css("display","none"); 
    $("#qanda").css("display","none");      
+	
+	if (stringval == "info")
+	{
+	   $('#infoedit').css("display","block");
+	   $('#infoeditdis').css("display","none");
+	   $("#infoedit").load("view_profile.php");
+	}
+	
+	if (stringval == "photos")
+	{
+		$('#gallery').load('gallery.php');
+	}
+	
+	if (stringval == "content_post")
+	{
+		$('#content_userpost').load('user_profile_post.php');
+	}
+	
+	if (stringval == "blogs")
+	{			   
+  		$('#profile_blog').css("display","block");	
+		$('#profile_blog').load('profile_blog.php');
+	}
+   	
+	if (stringval == "qanda")
+	{			   
+  		$('#qanda').css("display","block");	
+		$('#qanda').load('profile_qanda.php');
+	}
    $('#'+stringval).css("display","block");
 	
 }

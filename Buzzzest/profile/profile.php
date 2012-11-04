@@ -53,7 +53,7 @@ $uid=$_SESSION['UID'];
   <!-- end .sidebar1 --></div>
   
   <div class="content">
-   <div id="homemenu">&nbsp;&nbsp;<a href="#" onclick="fnchangediv('content_post')"; >Updates</a>&nbsp;&nbsp;
+   <div >&nbsp;&nbsp;<a href="#" onclick="fnchangediv('content_post')"; >Updates</a>&nbsp;&nbsp;
    <a href="#" onclick="fnchangediv('info')";  >Info</a>&nbsp;&nbsp;
    <a href="#" onclick="fnchangediv('blogs')"; >Blog</a>&nbsp;&nbsp;
    <a href="#" onclick="fnchangediv('qanda')"; >Q & A</a>&nbsp;&nbsp;
@@ -71,7 +71,9 @@ $uid=$_SESSION['UID'];
    </div> <!-- end of .content_post /update link-->
 
 <div id="blogs"> <!-- start of .blogs -->
-Blog
+<div id="profile_blog">
+
+</div>
 </div> <!-- end of .blogs -->
 
 <div id="photos">  <!-- start of .photos -->
@@ -163,7 +165,7 @@ if ($num_info > 0)
 </div>  <!-- end .info -->
 
 <div id="qanda">
-Q&A
+
 </div>
 
   <!-- end .content --></div>

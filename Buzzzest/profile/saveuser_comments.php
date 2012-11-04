@@ -17,7 +17,7 @@ $postid=$data['postid'];
 $txtcompost=$data['txtcompost'];
 
 $insert ="insert into comments(UID,CDATE,CTIME,CSTATUS,CTEXT,POSTID) values('".$userid."','".date('Y-m-d')."',
- 			'".$curtime."','1','".$txtcompost."','".$postid."')";
+ 			'".$curtime."','1','".htmlspecialchars($txtcompost)."','".$postid."')";
 $result_insert=mysql_query($insert,$linkid);
 echo "Successfully posted!!!";
 
