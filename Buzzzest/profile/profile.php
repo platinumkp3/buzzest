@@ -7,6 +7,28 @@ $linkid=db_connect();
 
 $uname=$_SESSION['UNAME'];
 $uid=$_SESSION['UID'];
+$select_photo="select UPHOTO,UGENDER from users where UID='".$uid."'";
+$res_select_photo=mysql_query($select_photo,$linkid);
+$num_select_photo=mysql_num_rows($res_select_photo);
+if ($num_select_photo > 0)
+{
+	$UPHOTO_val=$data_info['UPHOTO'];
+	$UGENDER_val=$data_info['UGENDER'];
+	if ($UPHOTO_val != "" && $UPHOTO_val != NULL)
+	{
+		$userpro_photo=$UPHOTO_val;
+	}
+	else 
+	{
+		if ($UGENDER_val == 2) {
+			$userpro_photo="female.jpg";}
+		else if ($UGENDER_val == 1) {
+			$userpro_photo="male.jpg"; 
+		}else {
+			$userpro_photo="humanicon.jpg";	
+		}		
+	}
+}
 ?>
 
 <script src="../js/profile.js" type="application/javascript" >
@@ -23,7 +45,7 @@ $uid=$_SESSION['UID'];
    <table width="100%" height="100%" cellpadding="0" cellspacing="0" id="tableborder" >
 	
     <tr>
-    <td width="12%" valign="top"><img src="../images/female.jpg" width="100" height="100"  /></td>
+    <td width="12%" valign="top"><img src="../images/<?php echo $userpro_photo?>" width="100" height="100"  /></td>
     <td width="88%" colspan="2" valign="top">
     <table  width="80%" height="80%" cellpadding="0" cellspacing="0"> 
     <tr><td colspan="4" align="left"><h3><?php echo $uname; ?></h3></td></tr>
@@ -135,7 +157,7 @@ if ($num_info > 0)
 		else if ($UGENDER == 1) {
 			$userphoto="male.jpg"; 
 		}else {
-			$userphoto="";	
+			$userphoto="humanicon.jpg";	
 		}
 		
 	}

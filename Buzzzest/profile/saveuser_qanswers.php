@@ -1,0 +1,24 @@
+<?php
+session_start();
+$uid=$_SESSION['UID'];
+$uname=$_SESSION['UNAME'];
+include "../includes/check_session.php";
+include "../db/common_db.php";
+$linkid=db_connect();
+
+//echo date_default_timezone_get();
+$timezone = "Asia/Calcutta";
+if(function_exists('date_default_timezone_set')) date_default_timezone_set($timezone);
+$curtime=date('Y-m-d H:i:s');
+
+$data=$_POST;
+$userid=$data['userid'];
+$postid=$data['postid'];
+$txtqacompost=$data['txtqacompost'];
+
+$insert ="insert into answers(UID,ADATE,ATIME,ASTATUS,ANSWER,QID) values('".$userid."','".date('Y-m-d')."',
+ 			'".$curtime."','1','".htmlspecialchars($txtqacompost)."','".$postid."')";
+$result_insert=mysql_query($insert,$linkid);
+echo "Successfully posted!!!";
+
+?>

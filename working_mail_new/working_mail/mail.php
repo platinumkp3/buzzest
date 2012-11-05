@@ -4,7 +4,7 @@
 	
 	$SMTP_SERVER="";
 	$USER_NAME="";
-	$EMAIL_PORT="" ;
+	$EMAIL_PORT= ;
 	$EMAIL_PWD="";
 	$EMAIL_SSL=false;
 	$EMAIL_FOOTER = "";
@@ -37,8 +37,6 @@
 			$m->Html($MSG_HTML);
 			$m->Send($EMAIL_SUBJECT);
 			$m->Quit(); 
-			
-			print_r($m->result);
 			
 		
 		return !$error;

@@ -12,8 +12,11 @@ $curtime=date('Y-m-d H:i:s');
 
 $data=$_POST;
 $userstory=$data['editor1'];
-$insert_story="insert into blog(UID,BLDATE,BLTIME,BLSTATUS,BLTEXT)
- values('".$uid."','".date('Y-m-d')."','".$curtime."','1','".htmlspecialchars($userstory)."')";
+$category=$data['blogcategory'];
+$blogtitle=$data['blogtitle'];
+$blogsummary=$data['blogsummary'];
+$insert_story="insert into blog(UID,BLDATE,BLTIME,BLSTATUS,BLTEXT,CATID,BLTITLE,BLSUMMARY)
+ values('".$uid."','".date('Y-m-d')."','".$curtime."','1','".htmlspecialchars($userstory)."','".$category."','".htmlspecialchars($blogtitle)."','".htmlspecialchars($blogsummary)."')";
 $res_insert_story=mysql_query($insert_story,$linkid);
 
 echo "Successfully posted!!!";

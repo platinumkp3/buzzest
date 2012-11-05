@@ -19,7 +19,7 @@ $(document).ready(function() {
 		$('#comment_postblog'+i).css("display","none");   
 		$('#likeblog'+i).css("display","none"); 	  
 		$('#deleteblog'+i).css("display","none"); 	  
-		//$('#share'+i).css("display","none"); 
+		$('#shareblog'+i).css("display","none"); 
 	}
 	
 	for (j=1;j<=comblogtotal;j++)
@@ -27,7 +27,7 @@ $(document).ready(function() {
 		$('#comment_postcomblog'+j).css("display","none");   
 		$('#likecomblog'+j).css("display","none"); 	  
 		$('#deletecomblog'+j).css("display","none"); 	  
-		//$('#sharecom'+j).css("display","none"); 
+		$('#sharecomblog'+j).css("display","none"); 
 	}	
 	
 });
@@ -41,7 +41,7 @@ function fnshow_hidediv(stringval)
 		$('#comment_postblog'+i).css("display","none");   
 		$('#likeblog'+i).css("display","none"); 	  
 		$('#deleteblog'+i).css("display","none"); 	  
-		//$('#share'+i).css("display","none"); 
+		$('#shareblog'+i).css("display","none"); 
 		$('#'+stringval).css("display","block");
 	}
 }
@@ -57,7 +57,7 @@ function fnshow_hidedivcom(stringval)
 		$('#comment_postcomblog'+j).css("display","none");    
 		$('#likecomblog'+j).css("display","none"); 	  
 		$('#deletecomblog'+j).css("display","none"); 	  
-		//$('#sharecom'+j).css("display","none"); 
+		$('#sharecomblog'+j).css("display","none"); 
 		$('#'+stringval).css("display","block");
 	}
 	
@@ -89,7 +89,8 @@ function fnsavecomments(userid,postid,txtid)
 <div id="profile_blog_view">
 <?php
 
-$select="select BLID,BLTEXT,UID,BLDATE,BLTIME from blog where UID='".$uid."' and BLSTATUS=1 order by BLID DESC";
+$select="select BLID,BLTEXT,UID,BLDATE,BLTIME,CATID,BLTITLE,BLSUMMARY
+		 from blog where UID='".$uid."' and BLSTATUS=1 order by BLID DESC";
 //code for home page
 /*$select="select POSTID,POST,UID from post where UID in(select FRNID from friends 
 		where UID='".$uid."' ) or UID='".$uid."' and PSTATUS=1 order by POSTID desc";*/
@@ -104,6 +105,23 @@ if ($num_select > 0)
 		$blogid=$data_select['BLID'];
 		$BLDATE=$data_select['BLDATE'];
 		$BLTIME=$data_select['BLTIME'];
+		$CATID=$data_select['CATID'];
+		$BLTITLE=$data_select['BLTITLE'];
+		$BLSUMMARY=$data_select['BLSUMMARY'];
+				
+		$category_sel="select CATNAME from category where CATID='".$CATID."'";
+		$res_category_sel=mysql_query($category_sel,$linkid);
+		$num_category_sel=mysql_num_rows($res_category_sel);
+		if ($num_category_sel>0)
+		{
+			$data_category_sel=mysql_fetch_array($res_category_sel);
+			$category_val=$data_category_sel['CATNAME'];					
+		}
+		else
+		{
+			$category_val="";
+		}
+				
 		$user_select="select UPHOTO from users where UID='".$uid."'";
 		$res_userselect=mysql_query($user_select,$linkid);
 		$data_userselect=mysql_fetch_array($res_userselect);
@@ -130,7 +148,20 @@ if ($num_select > 0)
     </tr>
     <tr>
     <td valign="top"><img src="<?php echo $userphoto;?>"  width="60" height="60"  /></td>
-	<td colspan="2"><?php echo $blog;?></td>
+	<td colspan="2">
+		<table width="90%" height="100%" cellpadding="0" cellspacing="0">
+			<tr>
+            	<td height="22"><strong><?php echo $BLTITLE; ?></strong></td>
+          </tr>
+            <tr>
+            	<td><?php echo $BLSUMMARY; ?>
+                <br />
+                <?php echo $blog;?>
+                </td>
+            </tr>            
+        </table>
+	
+	</td>
     </tr>
     <?php
     //code for comments
@@ -146,7 +177,7 @@ if ($num_select > 0)
 				$blcomuid=$data_sel_com['UID'];
 				$blctext=$data_sel_com['BLCTEXT'];
 				$blctime=$data_sel_com['BLCTIME'];
-				
+								
 				$select_comuser="select UPHOTO,UNAME from users where UID='".$blcomuid."'";
 				$res_comuser=mysql_query($select_comuser,$linkid);
 				$data_comuser=mysql_fetch_array($res_comuser);
@@ -180,28 +211,29 @@ if ($num_select > 0)
 			}
 		?>
 		<tr>
-			<td>&nbsp;</td><td colspan="2"><?php echo $post_timeval; ?> .
+			<td>&nbsp;</td><td colspan="2"><?php echo $post_timeval; ?> . <?php echo $category_val." . ";?> 
 			<a href="#" onclick="fnshow_hidedivcom('likecomblog<?php echo $blogid;  ?>'); return false">like</a>.
-			<a href="#" onclick="fnshow_hidedivcom('comment_postcomblog<?php echo $blogid;  ?>'); return false">Comment</a>.
-			<!--<a href="#" onclick="fnshow_hidedivcom('sharecom<?php //echo $v; ?>'); return false">Share</a>.-->
+			<a href="#" 
+            onclick="fnshow_hidedivcom('comment_postcomblog<?php echo $blogid;  ?>'); return false">Comment</a>.
+			<a href="#" onclick="fnshow_hidedivcom('sharecomblog<?php echo $blogid; ?>'); return false">Share</a>
 			<a href="#" onclick="fnshow_hidedivcom('deletecomblog<?php echo $blogid; ?>'); return false">delete</a> </td>
 			</tr>
 			<tr>   
 			<td colspan="2"><div id="comment_postcomblog<?php echo $blogid; ?>">
 			<form method="post" action="#" 
 			onsubmit="fnsavecomments('<?php echo $uid; ?>','<?php echo $blogid; ?>','txtblcompost<?php echo $blogid;?>'); return false;">
-				<textarea rows="2"   cols="39"  name="txtblcompost<?php echo $blogid; ?>" id="txtblcompost<?php echo $blogid; ?>" > </textarea>
+				<textarea rows="2"   cols="39" autofocus="autofocus" name="txtblcompost<?php echo $blogid; ?>" id="txtblcompost<?php echo $blogid; ?>" > </textarea>
 				<input type="submit"   width="88" height="20"  value="post" name="Submit" />
 			</form>
 			</div>
 			<div id="likecomblog<?php echo $blogid;  ?>">
-			likeblog
+			like blog
 			</div>
-			<!--<div id="sharecom<?php //echo $blogid;  ?>">
-			Share
-			</div>-->
+			<div id="sharecom<?php echo $blogid;  ?>">
+			Share blog
+			</div>
 			<div id="deletecomblog<?php echo $blogid;  ?>">
-			deleteblog
+			delete blog
 			</div>
 			</td> 
 		</tr>
@@ -211,28 +243,28 @@ if ($num_select > 0)
 		{
 			?>
 			 <tr>
-			<td>&nbsp;</td><td colspan="2"><?php echo $post_timeval; ?> .
+			<td>&nbsp;</td><td colspan="2"><?php echo $post_timeval; ?> . <?php echo $category_val." . ";?> 
 			<a href="#" onclick="fnshow_hidediv('likeblog<?php echo $blogid;  ?>'); return false">like</a>.
 			<a href="#" onclick="fnshow_hidediv('comment_postblog<?php echo $blogid;  ?>'); return false">Comment</a>.
-			<!--<a href="#" onclick="fnshow_hidediv('share<?php //echo $blogid;  ?>'); return false">Share</a>.-->
+			<a href="#" onclick="fnshow_hidediv('shareblog<?php echo $blogid;  ?>'); return false">Share</a>.
 			<a href="#" onclick="fnshow_hidediv('deleteblog<?php echo $blogid;  ?>'); return false">delete</a> </td>
 			</tr>
 			<tr>   
 			<td colspan="2"><div id="comment_postblog<?php echo $blogid; ?>">
 			<form method="post" action="#"
 			 onsubmit="fnsavecomments('<?php echo $uid; ?>','<?php echo $blogid; ?>','txtblcompost<?php echo $blogid; ?>'); return false;">
-				<textarea rows="2"  cols="39"  name="txtblcompost<?php echo $blogid; ?>" id="txtblcompost<?php echo $blogid; ?>"   > </textarea>
+				<textarea rows="2"  cols="39" autofocus="autofocus"  name="txtblcompost<?php echo $blogid; ?>" id="txtblcompost<?php echo $blogid; ?>"  > </textarea>
 				<input type="submit"   width="88" height="20"  value="post" name="Submit" />
 			</form>
 			</div>
 			<div id="likeblog<?php echo $blogid; ?>">
-			likeblog
+			like blog
 			</div>
-			<!--<div id="share<?php //echo $blogid; ?>">
-			Share
-			</div>-->
+			<div id="shareblog<?php echo $blogid; ?>">
+			Share blog
+			</div>
 			<div id="deleteblog<?php echo $blogid; ?>">
-			deleteblog
+			delete blog
 			</div>
 			</td>  </tr>
 			<?php 
