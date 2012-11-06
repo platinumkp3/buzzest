@@ -85,6 +85,31 @@ function fnsavecomments(userid,postid,txtid)
 	}
 }
 
+
+function fnblogdelete(user_id,post_id,string_val)
+{
+	if (user_id != "" && post_id !="" && string_val == "Yes")
+	{
+		url='delete_bloguser.php';
+		data=new Object();
+		data['user_id']=user_id;
+		data['post_id']=post_id;
+		$.ajax({
+		  type: 'POST', // type of request either Get or Post
+		  url: url, // Url of the page where to post data and receive response 
+		  data: data, // data to be post
+		  success: function(data){ 
+			 alert (data);
+		 	$('#profile_blog_view').load('view_profile_blog.php');		
+		  } //function to be called on successful reply from server
+		});
+	}
+	else if ( string_val == "No")
+	{
+		$('#profile_blog_view').load('view_profile_blog.php');	
+	}
+}
+
 </script>
 <div id="profile_blog_view">
 <?php
@@ -99,6 +124,7 @@ $num_select=mysql_num_rows($res_select);
 
 if ($num_select > 0)
 {
+	$num_count=1;
 	while($data_select=mysql_fetch_array($res_select))
 	{
 		$blog=$data_select['BLTEXT'];
@@ -212,28 +238,38 @@ if ($num_select > 0)
 		?>
 		<tr>
 			<td>&nbsp;</td><td colspan="2"><?php echo $post_timeval; ?> . <?php echo $category_val." . ";?> 
-			<a href="#" onclick="fnshow_hidedivcom('likecomblog<?php echo $blogid;  ?>'); return false">like</a>.
+			<!--<a href="#" 
+            onclick="fnshow_hidedivcom('likecomblog<?php// echo $num_count;  ?>'); return false">like</a>.-->
 			<a href="#" 
-            onclick="fnshow_hidedivcom('comment_postcomblog<?php echo $blogid;  ?>'); return false">Comment</a>.
-			<a href="#" onclick="fnshow_hidedivcom('sharecomblog<?php echo $blogid; ?>'); return false">Share</a>
-			<a href="#" onclick="fnshow_hidedivcom('deletecomblog<?php echo $blogid; ?>'); return false">delete</a> </td>
+            onclick="fnshow_hidedivcom('comment_postcomblog<?php echo $num_count;  ?>'); return false">Comment</a>.
+			<!--<a href="#" 
+            onclick="fnshow_hidedivcom('sharecomblog<?php //echo $num_count; ?>'); return false">Share</a>-->
+			<a href="#" onclick="fnshow_hidedivcom('deletecomblog<?php echo $num_count; ?>'); return false">delete</a> </td>
 			</tr>
 			<tr>   
-			<td colspan="2"><div id="comment_postcomblog<?php echo $blogid; ?>">
+			<td colspan="2"><div id="comment_postcomblog<?php echo $num_count; ?>">
 			<form method="post" action="#" 
-			onsubmit="fnsavecomments('<?php echo $uid; ?>','<?php echo $blogid; ?>','txtblcompost<?php echo $blogid;?>'); return false;">
-				<textarea rows="2"   cols="39" autofocus="autofocus" name="txtblcompost<?php echo $blogid; ?>" id="txtblcompost<?php echo $blogid; ?>" > </textarea>
+			onsubmit="fnsavecomments('<?php echo $uid; ?>','<?php echo $blogid; ?>','txtblcompost<?php echo $num_count;?>'); return false;">
+				<textarea rows="2"   cols="39" autofocus="autofocus"
+                 name="txtblcompost<?php echo $num_count; ?>" id="txtblcompost<?php echo $num_count; ?>" > </textarea>
 				<input type="submit"   width="88" height="20"  value="post" name="Submit" />
 			</form>
 			</div>
-			<div id="likecomblog<?php echo $blogid;  ?>">
+			<!--<div id="likecomblog<?php //echo $num_count;  ?>">
 			like blog
 			</div>
-			<div id="sharecom<?php echo $blogid;  ?>">
+			<div id="sharecom<?php //echo $num_count;  ?>">
 			Share blog
-			</div>
-			<div id="deletecomblog<?php echo $blogid;  ?>">
-			delete blog
+			</div>-->
+			<div id="deletecomblog<?php echo $num_count;  ?>">
+			 <br />           
+			<form name="frmprofdelete" id="frmprofdelete"  >
+           	  <label>Are u sure u want to delete ?</label>
+               <input type="button" name="yes" value="Yes" 
+                onclick="fnblogdelete('<?php echo $uid; ?>','<?php echo $blogid; ?>','Yes'); return false " />          
+            	<input type="button" name="no" value="No" 
+                 onclick="fnblogdelete('<?php echo $uid; ?>','<?php echo $blogid; ?>','No'); return false " /> 
+             </form>
 			</div>
 			</td> 
 		</tr>
@@ -244,34 +280,43 @@ if ($num_select > 0)
 			?>
 			 <tr>
 			<td>&nbsp;</td><td colspan="2"><?php echo $post_timeval; ?> . <?php echo $category_val." . ";?> 
-			<a href="#" onclick="fnshow_hidediv('likeblog<?php echo $blogid;  ?>'); return false">like</a>.
-			<a href="#" onclick="fnshow_hidediv('comment_postblog<?php echo $blogid;  ?>'); return false">Comment</a>.
-			<a href="#" onclick="fnshow_hidediv('shareblog<?php echo $blogid;  ?>'); return false">Share</a>.
-			<a href="#" onclick="fnshow_hidediv('deleteblog<?php echo $blogid;  ?>'); return false">delete</a> </td>
+			<!--<a href="#" onclick="fnshow_hidediv('likeblog<?php //echo $num_count;  ?>'); return false">like</a>.-->
+			<a href="#" onclick="fnshow_hidediv('comment_postblog<?php echo $num_count;  ?>'); return false">Comment</a>.
+			<!--<a href="#" onclick="fnshow_hidediv('shareblog<?php //echo $num_count;  ?>'); return false">Share</a>.-->
+			<a href="#" onclick="fnshow_hidediv('deleteblog<?php echo $num_count;  ?>'); return false">delete</a> </td>
 			</tr>
 			<tr>   
-			<td colspan="2"><div id="comment_postblog<?php echo $blogid; ?>">
+			<td colspan="2"><div id="comment_postblog<?php echo $num_count; ?>">
 			<form method="post" action="#"
-			 onsubmit="fnsavecomments('<?php echo $uid; ?>','<?php echo $blogid; ?>','txtblcompost<?php echo $blogid; ?>'); return false;">
-				<textarea rows="2"  cols="39" autofocus="autofocus"  name="txtblcompost<?php echo $blogid; ?>" id="txtblcompost<?php echo $blogid; ?>"  > </textarea>
+			 onsubmit="fnsavecomments('<?php echo $uid; ?>','<?php echo $blogid; ?>','txtblcompost<?php echo $num_count; ?>'); return false;">
+				<textarea rows="2"  cols="39" autofocus="autofocus" 
+                 name="txtblcompost<?php echo $num_count; ?>" id="txtblcompost<?php echo $num_count; ?>"  > </textarea>
 				<input type="submit"   width="88" height="20"  value="post" name="Submit" />
 			</form>
 			</div>
-			<div id="likeblog<?php echo $blogid; ?>">
+			<!--<div id="likeblog<?php //echo $num_count; ?>">
 			like blog
 			</div>
-			<div id="shareblog<?php echo $blogid; ?>">
+			<div id="shareblog<?php //echo $num_count; ?>">
 			Share blog
-			</div>
-			<div id="deleteblog<?php echo $blogid; ?>">
-			delete blog
+			</div>-->
+			<div id="deleteblog<?php echo $num_count; ?>">
+			 <br />           
+			<form name="frmprofdelete" id="frmprofdelete"  >
+           	  <label>Are u sure u want to delete ?</label>
+               <input type="button" name="yes" value="Yes" 
+                onclick="fnblogdelete('<?php echo $uid; ?>','<?php echo $blogid; ?>','Yes'); return false " />         
+            	<input type="button" name="no" value="No" 
+                 onclick="fnblogdelete('<?php echo $uid; ?>','<?php echo $blogid; ?>','No'); return false " /> 
+             </form>
 			</div>
 			</td>  </tr>
 			<?php 
 		} ?>
 </table>
 		
-<?php				
+<?php
+	$num_count++;				
 	}
 }
 ?>

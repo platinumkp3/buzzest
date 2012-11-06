@@ -85,6 +85,32 @@ function fnsavecommentsqa(userid,postid,txtid)
 	}
 }
 
+
+function fnqandadelete(user_id,post_id,string_val)
+{
+	
+	if (user_id != "" && post_id !="" && string_val == "Yes")
+	{
+		url='delete_qandauser.php';
+		data=new Object();
+		data['user_id']=user_id;
+		data['post_id']=post_id;
+		$.ajax({
+		  type: 'POST', // type of request either Get or Post
+		  url: url, // Url of the page where to post data and receive response 
+		  data: data, // data to be post
+		  success: function(data){ 
+			 alert (data);
+		 	$('#profile_blog_view').load('view_profile_qanda.php');	
+		  } //function to be called on successful reply from server
+		});
+	}
+	else if ( string_val == "No")
+	{
+		$('#profile_blog_view').load('view_profile_qanda.php');	
+	}
+}
+
 </script>
 <div id="profile_blog_view">
 <?php
@@ -98,6 +124,7 @@ $num_select=mysql_num_rows($res_select);
 
 if ($num_select > 0)
 {
+	$num_count=1;
 	while($data_select=mysql_fetch_array($res_select))
 	{
 		$QUESTION=$data_select['QUESTION'];
@@ -196,28 +223,37 @@ if ($num_select > 0)
 		?>
 		<tr>
 			<td>&nbsp;</td><td colspan="2"><?php echo $post_timeval; ?> . <?php echo $category_val." . ";?> 
-			<a href="#" onclick="fnshow_qahidedivcom('likecomqanda<?php echo $QID;  ?>'); return false">like</a>.
+			<!--<a href="#" 
+            onclick="fnshow_qahidedivcom('likecomqanda<?php //echo $num_count;  ?>'); return false">like</a>.-->
 			<a href="#" 
-            onclick="fnshow_qahidedivcom('comment_postcomqanda<?php echo $QID;  ?>'); return false">Comment</a>.
-			<a href="#" onclick="fnshow_qahidedivcom('shareqandablog<?php echo $QID; ?>'); return false">Share</a>
-			<a href="#" onclick="fnshow_qahidedivcom('deletecomqanda<?php echo $QID; ?>'); return false">delete</a> </td>
+            onclick="fnshow_qahidedivcom('comment_postcomqanda<?php echo $num_count;  ?>'); return false">Comment</a>.
+			<!--<a href="#" onclick="fnshow_qahidedivcom('shareqandablog<?php //echo $num_count; ?>'); return false">Share</a>-->
+			<a href="#" onclick="fnshow_qahidedivcom('deletecomqanda<?php echo $num_count; ?>'); return false">delete</a> </td>
 			</tr>
 			<tr>   
 			<td colspan="2"><div id="comment_postcomqanda<?php echo $QID; ?>">
 			<form method="post" action="#" 
-			onsubmit="fnsavecommentsqa('<?php echo $uid; ?>','<?php echo $QID; ?>','txtqacompost<?php echo $QID;?>'); return false;">
-				<textarea rows="2"   cols="39" autofocus="autofocus" name="txtqacompost<?php echo $ANSID; ?>" id="txtqacompost<?php echo $ANSID; ?>" > </textarea>
+			onsubmit="fnsavecommentsqa('<?php echo $uid; ?>','<?php echo $QID; ?>','txtqacompost<?php echo $num_count;?>'); return false;">
+				<textarea rows="2"   cols="39" autofocus="autofocus" name="txtqacompost<?php echo $num_count; ?>" id="txtqacompost<?php echo $num_count; ?>" > </textarea>
 				<input type="submit"   width="88" height="20"  value="post" name="Submit" />
 			</form>
 			</div>
-			<div id="likecomqanda<?php echo $QID;  ?>">
+			<!--<div id="likecomqanda<?php //echo $num_count;  ?>">
 			like qanda
 			</div>
-			<div id="shareqanda<?php echo $QID;  ?>">
+			<div id="shareqanda<?php // echo $num_count;  ?>">
 			Share qanda
-			</div>
-			<div id="deletecomqanda<?php echo $QID;  ?>">
-			delete qanda
+			</div>-->
+			<div id="deletecomqanda<?php echo $num_count;  ?>">
+			  <br />
+           
+			<form name="frmprofdelete" id="frmprofdelete"  >
+           	  <label>Are u sure u want to delete ?</label>
+               <input type="button" name="yes" value="Yes" 
+                onclick="fnqandadelete('<?php echo $uid; ?>','<?php echo $QID; ?>','Yes'); return false " />          
+            	<input type="button" name="no" value="No" 
+                 onclick="fnqandadelete('<?php echo $uid; ?>','<?php echo $QID; ?>','No'); return false " /> 
+             </form>
 			</div>
 			</td> 
 		</tr>
@@ -228,34 +264,45 @@ if ($num_select > 0)
 			?>
 			 <tr>
 			<td>&nbsp;</td><td colspan="2"><?php echo $post_timeval; ?> . <?php echo $category_val." . ";?> 
-			<a href="#" onclick="fnshow_qahidediv('likeqanda<?php echo $QID;  ?>'); return false">like</a>.
-			<a href="#" onclick="fnshow_qahidediv('comment_postqanda<?php echo $QID; ?>'); return false">Comment</a>.
-			<a href="#" onclick="fnshow_qahidediv('shareqanda<?php echo $QID;  ?>'); return false">Share</a>.
-			<a href="#" onclick="fnshow_qahidediv('deleteqanda<?php echo $QID;  ?>'); return false">delete</a> </td>
+			<!--<a href="#" 
+            onclick="fnshow_qahidediv('likeqanda<?php //echo $num_count;  ?>'); return false">like</a>.-->
+			<a href="#" onclick="fnshow_qahidediv('comment_postqanda<?php echo $num_count; ?>'); return false">Comment</a>.
+			<!--<a href="#" 
+            onclick="fnshow_qahidediv('shareqanda<?php //echo $num_count;  ?>'); return false">Share</a>.-->
+			<a href="#" onclick="fnshow_qahidediv('deleteqanda<?php echo $num_count;  ?>'); return false">delete</a> </td>
 			</tr>
 			<tr>   
-			<td colspan="2"><div id="comment_postqanda<?php echo $QID; ?>">
+			<td colspan="2"><div id="comment_postqanda<?php echo $num_count; ?>">
 			<form method="post" action="#"
-			 onsubmit="fnsavecommentsqa('<?php echo $uid; ?>','<?php echo $QID; ?>','txtqacompost<?php echo $QID; ?>'); return false;">
-				<textarea rows="2"  cols="39" autofocus="autofocus"  name="txtqacompost<?php echo $QID; ?>" id="txtqacompost<?php echo $QID; ?>"  > </textarea>
+			 onsubmit="fnsavecommentsqa('<?php echo $uid; ?>','<?php echo $QID; ?>','txtqacompost<?php echo $num_count; ?>'); return false;">
+				<textarea rows="2"  cols="39" autofocus="autofocus"  name="txtqacompost<?php echo $num_count; ?>" id="txtqacompost<?php echo $num_count; ?>"  > </textarea>
 				<input type="submit"   width="88" height="20"  value="post" name="Submit" />
 			</form>
 			</div>
-			<div id="likeqanda<?php echo $QID; ?>">
+			<!--<div id="likeqanda<?php //echo $num_count; ?>">
 			like qanda
 			</div>
-			<div id="shareqanda<?php echo $QID; ?>">
+			<div id="shareqanda<?php //echo $num_count; ?>">
 			Share qanda
-			</div>
-			<div id="deleteqanda<?php echo $QID; ?>">
-			delete qanda
+			</div>-->
+			<div id="deleteqanda<?php echo $num_count; ?>">
+			  <br />
+           
+			<form name="frmprofdelete" id="frmprofdelete"  >
+           	  <label>Are u sure u want to delete ?</label>
+               <input type="button" name="yes" value="Yes" 
+                onclick="fnqandadelete('<?php echo $uid; ?>','<?php echo $QID; ?>','Yes'); return false " />          
+            	<input type="button" name="no" value="No" 
+                 onclick="fnqandadelete('<?php echo $uid; ?>','<?php echo $QID; ?>','No'); return false " /> 
+             </form>
 			</div>
 			</td>  </tr>
 			<?php 
 		} ?>
 </table>
 		
-<?php				
+<?php		
+	$num_count++;		
 	}
 }
 ?>

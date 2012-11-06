@@ -4,6 +4,11 @@ unset($_SESSION['UID']);
 unset ($_SESSION['UNAME']);
 session_destroy();
 
-require "includes/check_session.php";
+$_SESSION['UID'];
+$_SESSION['UNAME'];
+if ($_SESSION['UID'] == "" && $_SESSION['UNAME'] == "" )
+{
+	header("location:index.php");
+}
 
 ?>

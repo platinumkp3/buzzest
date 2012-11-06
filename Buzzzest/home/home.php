@@ -114,25 +114,13 @@ Anything to share?
 </form>
 </div>	
 <div>
-<a href="#" onclick="fnchangehomediv('content_post')" >Updates</a>&nbsp;&nbsp;
+<a href="#" onclick="fnchangehomediv('content_post_home')" >Updates</a>&nbsp;&nbsp;
 <a href="#" onclick="fnchangehomediv('list')" >List</a>&nbsp;&nbsp;
 <a href="#" onclick="fnchangehomediv('friends')" >Friends</a>&nbsp;&nbsp;
 <a href="#" onclick="fnchangehomediv('following')" >Following</a>
 </div>
-<div id="content_post">
-<table width="100%" height="100%" cellpadding="0" cellspacing="0" id="tableborder" >
-	<tr>
-    <td width="15%">&nbsp;</td><td width="85%"><b><?php echo $uname;?></b></td><td width="2%"><img src="../images/valid.png"  /></td>
-    </tr>
-    <tr>
-    <td valign="top"><img src="../images/bee2.gif" width="60" height="60"  /></td><td colspan="2">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. </td>
-    </tr>
-     <tr>
-    <td>&nbsp;</td><td colspan="2">3 hours ago .<a href="">Like</a>.<a href="">Comment</a>.<a href="">Share</a>.
-    <a href="">Delete</a> </td>
-    </tr>
-     
-</table>
+<div id="content_post_home">
+
 </div>
 
 <div id="list">

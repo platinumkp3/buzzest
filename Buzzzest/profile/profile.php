@@ -2,8 +2,8 @@
 session_start();
 include "../includes/check_session.php";
 require "../includes/header.php";
-include "../db/common_db.php";
-$linkid=db_connect();
+//include "../db/common_db.php";
+//$linkid=db_connect();
 
 $uname=$_SESSION['UNAME'];
 $uid=$_SESSION['UID'];
@@ -12,8 +12,10 @@ $res_select_photo=mysql_query($select_photo,$linkid);
 $num_select_photo=mysql_num_rows($res_select_photo);
 if ($num_select_photo > 0)
 {
-	$UPHOTO_val=$data_info['UPHOTO'];
-	$UGENDER_val=$data_info['UGENDER'];
+	$data_info_pro=mysql_fetch_array($res_select_photo);
+	
+	$UPHOTO_val=$data_info_pro['UPHOTO'];
+	$UGENDER_val=$data_info_pro['UGENDER'];
 	if ($UPHOTO_val != "" && $UPHOTO_val != NULL)
 	{
 		$userpro_photo=$UPHOTO_val;
@@ -21,14 +23,25 @@ if ($num_select_photo > 0)
 	else 
 	{
 		if ($UGENDER_val == 2) {
-			$userpro_photo="female.jpg";}
+			$userpro_photo="../images/female.jpg";}
 		else if ($UGENDER_val == 1) {
-			$userpro_photo="male.jpg"; 
+			$userpro_photo="../images/male.jpg"; 
 		}else {
-			$userpro_photo="humanicon.jpg";	
+			$userpro_photo="../images/humanicon.jpg";	
 		}		
 	}
 }
+
+$sel_updates="select count(*) as CNT from post where UID='".$uid."'";
+$res_sel_updates=mysql_query($sel_updates,$linkid);
+$data_sel_updates=mysql_fetch_array($res_sel_updates);
+$update_count=$data_sel_updates['CNT'];
+
+
+$sel_friends="select count(*) as CNT from friends where UID='".$uid."' and FSTATUS='1'";
+$res_sel_friends=mysql_query($sel_friends,$linkid);
+$data_sel_friends=mysql_fetch_array($res_sel_friends);
+$friends_count=$data_sel_friends['CNT'];
 ?>
 
 <script src="../js/profile.js" type="application/javascript" >
@@ -45,12 +58,12 @@ if ($num_select_photo > 0)
    <table width="100%" height="100%" cellpadding="0" cellspacing="0" id="tableborder" >
 	
     <tr>
-    <td width="12%" valign="top"><img src="../images/<?php echo $userpro_photo?>" width="100" height="100"  /></td>
-    <td width="88%" colspan="2" valign="top">
-    <table  width="80%" height="80%" cellpadding="0" cellspacing="0"> 
+    <td width="13%" valign="top"><img src="<?php echo $userpro_photo?>" width="100" height="100"  /></td>
+    <td width="87%" colspan="2" valign="top">
+    <table  width="85%" height="80%" cellpadding="0" cellspacing="0" align="center"> 
     <tr><td colspan="4" align="left"><h3><?php echo $uname; ?></h3></td></tr>
-     <tr id="trbordertop"><td width="24%" id="tdborderlefttop" >Updates</td><td width="26%" id="tdbordertop" >Friends</td><td width="31%" id="tdbordertop" >Followings</td><td width="19%" id="tdborderrighttop" >Followers</td></tr>
-     <tr><td id="tdborderleftbottom">&nbsp;</td><td id="tdborderbottom" >&nbsp;</td><td id="tdborderbottom" >&nbsp;</td><td id="tdborderrightbottom">&nbsp;</td></tr>
+     <tr id="trbordertop"><td width="24%" id="tdborderlefttop" align="center" >Updates</td><td width="26%" id="tdbordertop" align="center">Friends</td><td width="31%" id="tdbordertop" align="center" >Followings</td><td width="19%" id="tdborderrighttop" align="center" >Followers</td></tr>
+     <tr><td id="tdborderleftbottom" align="center"><strong><?php echo $update_count; ?></strong></td><td id="tdborderbottom" align="center" ><strong><?php echo $friends_count; ?></strong></td><td id="tdborderbottom" align="center" >&nbsp;</td><td id="tdborderrightbottom" align="center">&nbsp;</td></tr>
     </table>   
     </td>
     </tr>    

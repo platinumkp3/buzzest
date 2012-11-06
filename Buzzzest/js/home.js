@@ -8,7 +8,8 @@ $(document).ready(function() {
    $("#friends").css("display","none");
    
    $('#following').hide("");
-   $("#following").css("display","none");   
+   $('#following').css("display","none"); 
+   $('#content_post_home').load("user_home_post.php");  
    
 });
  
@@ -17,8 +18,8 @@ function fnchangehomediv(stringval)
    $('#list').hide("");	
    $('#friends').hide("");	
    $('#following').hide("");
-   $('#content_post').hide("");
-   $("#content_post").css("display","none");
+   $('#content_post_home').hide("");
+   $("#content_post_home").css("display","none");
    $("#list").css("display","none");
    $("#friends").css("display","none");
    $("#following").css("display","none"); 

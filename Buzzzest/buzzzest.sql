@@ -32,11 +32,9 @@ CREATE TABLE `answers` (
   KEY `UID` (`UID`),
   CONSTRAINT `answers_ibfk_1` FOREIGN KEY (`UID`) REFERENCES `users` (`UID`),
   CONSTRAINT `answers_ibfk_2` FOREIGN KEY (`QID`) REFERENCES `querstions` (`QID`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
 /*Data for the table `answers` */
-
-insert  into `answers`(`ANSID`,`QID`,`UID`,`ANSWER`,`ADATE`,`ATIME`,`ASTATUS`) values (1,1,1,'sdfsfsdf ','2012-11-05','2012-11-05 13:53:55',1),(2,1,1,'testing!!!!','2012-11-05','2012-11-05 13:54:47',1);
 
 /*Table structure for table `blog` */
 
@@ -57,7 +55,7 @@ CREATE TABLE `blog` (
   KEY `FK_blog` (`CATID`),
   CONSTRAINT `blog_ibfk_1` FOREIGN KEY (`UID`) REFERENCES `users` (`UID`),
   CONSTRAINT `FK_blog` FOREIGN KEY (`CATID`) REFERENCES `category` (`CATID`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 /*Data for the table `blog` */
 
@@ -119,11 +117,11 @@ CREATE TABLE `comments` (
   KEY `POSTID` (`POSTID`),
   CONSTRAINT `comments_ibfk_1` FOREIGN KEY (`POSTID`) REFERENCES `post` (`POSTID`),
   CONSTRAINT `comments_ibfk_2` FOREIGN KEY (`UID`) REFERENCES `users` (`UID`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 
 /*Data for the table `comments` */
 
-insert  into `comments`(`CMTID`,`UID`,`CDATE`,`CTIME`,`CSTATUS`,`CTEXT`,`POSTID`) values (1,1,'2012-11-04','2012-11-04 21:48:22',1,'awfoasf',1),(2,1,'2012-11-05','2012-11-05 00:08:28',1,'hi',1);
+insert  into `comments`(`CMTID`,`UID`,`CDATE`,`CTIME`,`CSTATUS`,`CTEXT`,`POSTID`) values (6,1,'2012-11-06','2012-11-06 14:27:47',1,' sdsdf',6),(7,1,'2012-11-06','2012-11-06 14:32:26',1,'sfsdfsdf',4);
 
 /*Table structure for table `friends` */
 
@@ -140,11 +138,11 @@ CREATE TABLE `friends` (
   PRIMARY KEY (`FRNID`),
   KEY `UID` (`UID`),
   CONSTRAINT `friends_ibfk_1` FOREIGN KEY (`UID`) REFERENCES `users` (`UID`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 /*Data for the table `friends` */
 
-insert  into `friends`(`FRNID`,`UID`,`FSTATUS`,`FDATE`,`FTIME`,`MAILSTATUS`,`FRIENDID`) values (1,1,0,'2012-11-05','2012-11-05 17:40:53',1,11);
+insert  into `friends`(`FRNID`,`UID`,`FSTATUS`,`FDATE`,`FTIME`,`MAILSTATUS`,`FRIENDID`) values (1,1,1,'2012-11-06','2012-11-06 17:46:55',1,11),(2,11,1,'2012-11-06','2012-11-06 17:47:16',1,1);
 
 /*Table structure for table `post` */
 
@@ -160,11 +158,11 @@ CREATE TABLE `post` (
   PRIMARY KEY (`POSTID`),
   KEY `UID` (`UID`),
   CONSTRAINT `post_ibfk_1` FOREIGN KEY (`UID`) REFERENCES `users` (`UID`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 
 /*Data for the table `post` */
 
-insert  into `post`(`POSTID`,`UID`,`POST`,`POSTDATE`,`POSTTIME`,`PSTATUS`) values (1,1,'hi','2012-11-04','2012-11-04 21:32:59',1);
+insert  into `post`(`POSTID`,`UID`,`POST`,`POSTDATE`,`POSTTIME`,`PSTATUS`) values (2,1,'hi!!','2012-11-06','2012-11-06 10:04:39',1),(4,11,'dfgdfgdgf','2012-11-06','2012-11-06 11:41:59',1),(5,11,'dfgdfgdfg','2012-11-06','2012-11-06 11:42:03',1),(6,11,'just testing!!!!','2012-11-06','2012-11-06 11:42:10',1),(7,1,'hi','2012-11-06','2012-11-06 17:40:24',1);
 
 /*Table structure for table `querstions` */
 
@@ -183,11 +181,33 @@ CREATE TABLE `querstions` (
   KEY `FK_querstions` (`CATID`),
   CONSTRAINT `FK_querstions` FOREIGN KEY (`CATID`) REFERENCES `category` (`CATID`),
   CONSTRAINT `querstions_ibfk_1` FOREIGN KEY (`UID`) REFERENCES `users` (`UID`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
 /*Data for the table `querstions` */
 
-insert  into `querstions`(`QID`,`UID`,`QDATE`,`QTIME`,`QUESTION`,`QSTATUS`,`CATID`) values (1,1,'2012-11-05','2012-11-05 12:49:06','Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book',1,11);
+insert  into `querstions`(`QID`,`UID`,`QDATE`,`QTIME`,`QUESTION`,`QSTATUS`,`CATID`) values (3,1,'2012-11-06','2012-11-06 11:24:50','fgdgdg',1,11);
+
+/*Table structure for table `share` */
+
+DROP TABLE IF EXISTS `share`;
+
+CREATE TABLE `share` (
+  `SHRID` int(11) NOT NULL AUTO_INCREMENT,
+  `POSTID` int(11) DEFAULT NULL,
+  `UID` int(11) DEFAULT NULL,
+  `SHDATE` date DEFAULT NULL,
+  `SHTIME` datetime DEFAULT NULL,
+  `SHSTATUS` int(11) DEFAULT NULL,
+  PRIMARY KEY (`SHRID`),
+  KEY `FK_share` (`UID`),
+  KEY `FK1_share` (`POSTID`),
+  CONSTRAINT `FK1_share` FOREIGN KEY (`POSTID`) REFERENCES `post` (`POSTID`),
+  CONSTRAINT `FK_share` FOREIGN KEY (`UID`) REFERENCES `users` (`UID`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+
+/*Data for the table `share` */
+
+insert  into `share`(`SHRID`,`POSTID`,`UID`,`SHDATE`,`SHTIME`,`SHSTATUS`) values (2,4,1,'2012-11-06','2012-11-06 14:32:29',1),(5,4,10,'2012-11-06','2012-11-06 15:02:47',1),(6,4,9,'2012-11-06','2012-11-06 15:02:47',1);
 
 /*Table structure for table `users` */
 

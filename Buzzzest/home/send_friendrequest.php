@@ -36,7 +36,8 @@ if(function_exists('date_default_timezone_set')) date_default_timezone_set($time
 $curdate=date('Y-m-d');	
 if ($message_val == 1)
 {
-	 $select_friend="select * from friends where UID='".$uid."' and FRIENDID='".$frnid."'";
+	 $select_friend="select * from friends where (UID='".$uid."' and FRIENDID='".$frnid."') 
+	 or ( UID='".$frnid."' and FRIENDID='".$uid."')";
 	 $res_select_friend=mysql_query($select_friend,$linkid);
 	 $num_select_friend=mysql_num_rows($res_select_friend);
 	 if ($num_select_friend == 0)

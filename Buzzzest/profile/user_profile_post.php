@@ -86,6 +86,31 @@ function fnsavecomments(userid,postid,txtid)
 	}
 }
 
+function fnprofdelete(user_id,post_id,string_val)
+{
+	
+	if (user_id != "" && post_id !="" && string_val == "Yes")
+	{
+		url='delete_profuser.php';
+		data=new Object();
+		data['user_id']=user_id;
+		data['post_id']=post_id;
+		$.ajax({
+		  type: 'POST', // type of request either Get or Post
+		  url: url, // Url of the page where to post data and receive response 
+		  data: data, // data to be post
+		  success: function(data){ 
+			 alert (data);
+		 	 $('#content_userpost').load('user_profile_post.php');	
+		  } //function to be called on successful reply from server
+		});
+	}
+	else if ( string_val == "No")
+	{
+		$('#content_userpost').load('user_profile_post.php');	
+	}
+}
+
 </script>
 <?php
 
@@ -98,6 +123,7 @@ $num_select=mysql_num_rows($res_select);
 
 if ($num_select > 0)
 {
+	$num_count=1;
 	while($data_select=mysql_fetch_array($res_select))
 	{
 		$post=$data_select['POST'];
@@ -180,28 +206,37 @@ if ($num_select > 0)
 			}
 		?>
 		<tr>
-			<td>&nbsp;</td><td colspan="2"><?php echo $post_timeval; ?> .
-			<a href="#" onclick="fnshow_hidedivcom('likecom<?php echo $postid;  ?>'); return false">Like</a>.
-			<a href="#" onclick="fnshow_hidedivcom('comment_postcom<?php echo $postid;  ?>'); return false">Comment</a>.
-			<!--<a href="#" onclick="fnshow_hidedivcom('sharecom<?php //echo $postid; ?>'); return false">Share</a>.-->
-			<a href="#" onclick="fnshow_hidedivcom('deletecom<?php echo $postid; ?>'); return false">Delete</a> </td>
+			<td>&nbsp;</td><td colspan="2"><?php echo $post_timeval; ?> 
+		<!--<a href="#" onclick="fnshow_hidedivcom('likecom<?php // echo $num_count;?>'); return false">Like</a>-->.
+		<a href="#" onclick="fnshow_hidedivcom('comment_postcom<?php echo $num_count;  ?>'); return false">Comment</a>.
+		<!--<a href="#" onclick="fnshow_hidedivcom('sharecom<?php //echo $num_count; ?>'); return false">Share</a>.-->
+		<a href="#" onclick="fnshow_hidedivcom('deletecom<?php echo $num_count; ?>'); return false">Delete</a> </td>
 			</tr>
 			<tr>   
-			<td colspan="2"><div id="comment_postcom<?php echo $postid; ?>">
+			<td colspan="2"><div id="comment_postcom<?php echo $num_count; ?>">
 			<form method="post" action="#" 
-			onsubmit="fnsavecomments('<?php echo $uid; ?>','<?php echo $postid; ?>','txtcompost<?php echo $postid;?>'); return false;">
-				<textarea rows="2"   cols="39"  name="txtcompost<?php echo $postid; ?>" id="txtcompost<?php echo $postid; ?>" > </textarea>
+			onsubmit="fnsavecomments('<?php echo $uid; ?>','<?php echo $postid; ?>','txtcompost<?php echo $num_count;?>'); return false;">
+				<textarea rows="2"   cols="39"  autofocus="autofocus"
+                name="txtcompost<?php echo $num_count; ?>" id="txtcompost<?php echo $num_count; ?>" > </textarea>
 				<input type="submit"   width="88" height="20"  value="post" name="Submitcom" />
 			</form>
 			</div>
-			<div id="likecom<?php echo $postid;  ?>">
+			<!--<div id="likecom<?php //echo $num_count;  ?>">
 			Like
 			</div>
-			<!--<div id="sharecom<?php //echo $postid;  ?>">
+			<div id="sharecom<?php //echo $num_count;  ?>">
 			Share
 			</div>-->
-			<div id="deletecom<?php echo $postid;  ?>">
-			Delete
+			<div id="deletecom<?php echo $num_count;  ?>">
+              <br />
+           
+			<form name="frmprofdelete" id="frmprofdelete"  >
+           	  <label>Are u sure u want to delete ?</label>
+               <input type="button" name="yes" value="Yes" 
+                onclick="fnprofdelete('<?php echo $uid; ?>','<?php echo $postid; ?>','Yes'); return false " />          
+            	<input type="button" name="no" value="No" 
+                 onclick="fnprofdelete('<?php echo $uid; ?>','<?php echo $postid; ?>','No'); return false " /> 
+             </form>
 			</div>
 			</td> 
 		</tr>
@@ -212,34 +247,43 @@ if ($num_select > 0)
 			?>
 			 <tr>
 			<td>&nbsp;</td><td colspan="2"><?php echo $post_timeval; ?> .
-			<a href="#" onclick="fnshow_hidediv('like<?php echo $postid;  ?>'); return false">Like</a>.
-			<a href="#" onclick="fnshow_hidediv('comment_post<?php echo $postid;  ?>'); return false">Comment</a>.
-			<!--<a href="#" onclick="fnshow_hidediv('share<?php //echo $postid;  ?>'); return false">Share</a>.-->
-			<a href="#" onclick="fnshow_hidediv('delete<?php echo $postid;  ?>'); return false">Delete</a> </td>
+			<!--<a href="#" onclick="fnshow_hidediv('like<?php //echo $num_count;  ?>'); return false">Like</a>.-->
+			<a href="#" onclick="fnshow_hidediv('comment_post<?php echo $num_count;  ?>'); return false">Comment</a>.
+			<!--<a href="#" onclick="fnshow_hidediv('share<?php //echo $num_count;  ?>'); return false">Share</a>.-->
+			<a href="#" onclick="fnshow_hidediv('delete<?php echo $num_count;  ?>'); return false">Delete</a> </td>
 			</tr>
 			<tr>   
-			<td colspan="2"><div id="comment_post<?php echo $postid; ?>">
+			<td colspan="2"><div id="comment_post<?php echo $num_count; ?>">
 			<form method="post" action="#"
-			 onsubmit="fnsavecomments('<?php echo $uid; ?>','<?php echo $postid; ?>','txtcompost<?php echo $postid; ?>'); return false">
-				<textarea rows="2"   cols="39"  name="txtcompost<?php echo $postid; ?>" id="txtcompost<?php echo $postid; ?>"   > </textarea>
+			 onsubmit="fnsavecomments('<?php echo $uid; ?>','<?php echo $postid; ?>','txtcompost<?php echo $num_count; ?>'); return false">
+				<textarea rows="2"   cols="39"  autofocus="autofocus"
+                 name="txtcompost<?php echo $num_count; ?>" id="txtcompost<?php echo $num_count; ?>"   > </textarea>
 				<input type="submit"   width="88" height="20"  value="post" name="Submit" />
 			</form>
 			</div>
-			<div id="like<?php echo $postid; ?>">
+			<!--<div id="like<?php //echo $num_count; ?>">
 			Like
 			</div>
-			<!--<div id="share<?php //echo $postid; ?>">
+			<div id="share<?php //echo $num_count; ?>">
 			Share
 			</div>-->
-			<div id="delete<?php echo $postid; ?>">
-			Delete
+			<div id="delete<?php echo $num_count; ?>">
+             <br />
+			<form name="frmprofdelete" id="frmprofdelete"  >
+            	<label>Are u sure u want to delete ?</label>
+                <input type="button" name="yes" value="Yes" 
+                onclick="fnprofdelete('<?php echo $uid; ?>','<?php echo $postid; ?>','Yes'); return false " />
+                <input type="button" name="no" value="No" 
+                 onclick="fnprofdelete('<?php echo $uid; ?>','<?php echo $postid; ?>','No'); return false " /> 
+             </form>
 			</div>
 			</td>  </tr>
 			<?php 
 		} ?>
 </table>
 		
-<?php				
+<?php	
+ $num_count++;			
 	}
 }
 ?>
