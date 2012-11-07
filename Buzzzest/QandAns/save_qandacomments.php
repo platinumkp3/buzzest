@@ -14,9 +14,10 @@ $curtime=date('Y-m-d H:i:s');
 $data=$_POST;
 $userid=$data['userid'];
 $postid=$data['postid'];
-$txtcompost=$data['txtblcompost'];
+$txtcompost=$data['txtcompost'];
 
-$insert ="insert into blog_comments(UID,BLCDATE,BLCTIME,BLCSTATUS,BLCTEXT,BLID) values('".$userid."','".date('Y-m-d')."','".$curtime."','1','".htmlspecialchars($txtcompost)."','".$postid."')";
+$insert ="insert into answers(UID,ADATE,ATIME,ASTATUS,ANSWER,QID) values('".$userid."','".date('Y-m-d')."',
+ 			'".$curtime."','1','".htmlspecialchars($txtcompost)."','".$postid."')";
 $result_insert=mysql_query($insert,$linkid);
 echo "Successfully posted!!!";
 

@@ -36,8 +36,8 @@ $(document).ready(function() {
   <input type="text" value="Search" />
 	
   &nbsp;&nbsp;<a href="../home/home.php">Home</a>&nbsp;&nbsp; <a href="../profile/profile.php" >Profile</a>&nbsp;&nbsp;
-  <a href="../QandAns/QandAns.php" >Q & A</a>&nbsp;&nbsp;  
-   <a href="../blog/Blog.php" >Blog</a>&nbsp;&nbsp; <a href="../message/message.php" >Messages</a>&nbsp;&nbsp;
+  <a href="../QandAns/qandans.php" >Q & A</a>&nbsp;&nbsp;  
+   <a href="../blog/blog.php" >Blog</a>&nbsp;&nbsp; <a href="../message/message.php" >Messages</a>&nbsp;&nbsp;
     <a href="../job/job.php" >Job</a> &nbsp;&nbsp;  
    <a href="../logout.php">Logout</a>  &nbsp;&nbsp;  
   

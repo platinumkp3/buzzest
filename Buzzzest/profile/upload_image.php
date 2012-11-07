@@ -3,7 +3,7 @@ session_start();
 $uid=$_SESSION['UID'];
 // Script from http://coursesweb.net/ajax
 
- $savefolder = "uploads/".$uid;		// folder for upload
+$savefolder = "../uploads/".$uid;		// folder for upload
 $max_size = 250;			// maxim size for image file, in KiloBytes
 
 // Allowed image types

@@ -116,7 +116,8 @@ $friends_count=$data_sel_friends['CNT'];
 <form id="uploadform" action="upload_image.php" method="post" enctype="multipart/form-data" target="uploadframe" onsubmit="uploadimg(this); return false">
   <input type="file" id="myfile" name="myfile" />
   <input type="submit" value="Submit" />
-  <iframe id="uploadframe" name="uploadframe" src="upload_image.php" width="8" height="8" scrolling="no" frameborder="0"></iframe>
+  <iframe id="uploadframe" name="uploadframe" src="upload_image.php" width="8" height="8" scrolling="no" 
+  frameborder="0"></iframe>
 </form>
 	
 </div>
@@ -171,8 +172,7 @@ if ($num_info > 0)
 			$userphoto="male.jpg"; 
 		}else {
 			$userphoto="humanicon.jpg";	
-		}
-		
+		}		
 	}
 	
 	$UDOB=$data_info['UDOB'];

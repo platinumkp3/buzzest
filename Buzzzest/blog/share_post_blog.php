@@ -17,12 +17,12 @@ $action=$data['action'];
 
 if ($action == "save")
 {
-	$select="select * from share where POSTID='".$post_id."' and UID='".$user_id."'";
+	$select="select * from share_blog where BLID='".$post_id."' and UID='".$user_id."'";
 	$res_select=mysql_query($select,$linkid);
 	$num_res_select=mysql_num_rows($res_select);
 	if ($num_res_select == 0)
 	{
-		$insert_share="insert into share(POSTID,UID,SHDATE,SHTIME,SHSTATUS) values('".$post_id."','".$user_id."',
+		$insert_share="insert into share_blog(BLID,UID,BSHDATE,BSHTIME,BSHSTATUS) values('".$post_id."','".$user_id."',
 		'".date('Y-m-d')."','".$curtime."','1')";
 		$res_insert_share=mysql_query($insert_share,$linkid);
 		echo "Successfully Shared!!!";
@@ -35,7 +35,7 @@ if ($action == "save")
 
 if ($action == "delete")
 {
-	$delete_share="delete from share where POSTID='".$post_id."' and UID='".$user_id."'";
+	$delete_share="delete from share_blog where BLID='".$post_id."' and UID='".$user_id."'";
 	$res_delete_share=mysql_query($delete_share,$linkid);
 	echo "Successfully UnShared!!!";
 }

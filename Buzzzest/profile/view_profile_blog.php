@@ -170,7 +170,7 @@ if ($num_select > 0)
 	?>
          <table width="100%" height="100%" cellpadding="0" cellspacing="0" id="tableborder" >
 	<tr>
-    <td width="15%"><input type="hidden" name="totalpostblog" id="totalpostblog" value="<?php echo $num_select; ?>" /></td><td width="85%"><b><?php echo $uname;?></b></td><td width="2%"><img src="../images/valid.png"  /></td>
+    <td width="15%"><input type="hidden" name="totalpostblog" id="totalpostblog" value="<?php echo $num_select; ?>" /></td><td width="85%"><b><?php echo $uname;?></b></td><td width="2%"> <a href="#" onclick="fnshoweditdiv('editcomment_postcom<?php echo $num_count; ?>','<?php echo $num_count; ?>'); return false">Edit</a></td>
     </tr>
     <tr>
     <td valign="top"><img src="<?php echo $userphoto;?>"  width="60" height="60"  /></td>
@@ -180,9 +180,9 @@ if ($num_select > 0)
             	<td height="22"><strong><?php echo $BLTITLE; ?></strong></td>
           </tr>
             <tr>
-            	<td><?php echo $BLSUMMARY; ?>
+            	<td><div id="userblog"><?php echo $BLSUMMARY; ?>
                 <br />
-                <?php echo $blog;?>
+                <?php echo $blog;?></div>
                 </td>
             </tr>            
         </table>
@@ -223,12 +223,15 @@ if ($num_select > 0)
 				<td>
 				<table width="105%" height="100%" cellpadding="0" cellspacing="0" >
 					<tr>
-					  <td width="15%"><input type="hidden" name="totalcomblog" id="totalcomblog" value="<?php echo $num_rows_compost; ?>" /></td><td width="81%"><b><?php echo $cuname;?></b></td>
-					  <td width="4%">&nbsp;</td>
+					  <td width="13%"><input type="hidden" name="totalcomblog" id="totalcomblog" value="<?php echo $num_rows_compost; ?>" /></td><td width="70%"><b><?php echo $cuname;?></b></td>
+					  <td width="17%"> <?php if ($blcomuid == $uid) { ?>
+                      <a href="#" onclick="fnshoweditdivcom('editcomment_post<?php echo $num_count; ?>','<?php echo $num_count; ?>'); return false" >Edit </a>&nbsp;&nbsp;
+                      <a href="#" onclick="fncomdeleteprof('<?php echo $uid; ?>','<?php echo $blcomid;?>','<?php echo $blogid;?>'); return false;" >Delete</a>
+                      <?php } ?></td>
 					</tr>
 					<tr>
-						<td valign="top"><img src="<?php echo $comuserphoto;?>"  width="60" height="60"  /></td>
-						<td colspan="2"><?php echo $blctext;?></td>
+						<td valign="top"><img src="<?php echo $comuserphoto;?>"  width="40" height="40"  /></td>
+						<td colspan="2"><div id="userblogcomment"><?php echo $blctext;?></div></td>
 					</tr>
 				</table>
 				</td>

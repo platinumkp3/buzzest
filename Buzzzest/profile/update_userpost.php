@@ -12,12 +12,12 @@ if(function_exists('date_default_timezone_set')) date_default_timezone_set($time
 $curtime=date('Y-m-d H:i:s');
 
 $data=$_POST;
-$userid=$data['userid'];
-$postid=$data['postid'];
-$txtcompost=$data['txtblcompost'];
+$userid=$data['user_id'];
+$postid=$data['post_id'];
+$txtcompost=$data['txteditcompost'];
 
-$insert ="insert into blog_comments(UID,BLCDATE,BLCTIME,BLCSTATUS,BLCTEXT,BLID) values('".$userid."','".date('Y-m-d')."','".$curtime."','1','".htmlspecialchars($txtcompost)."','".$postid."')";
-$result_insert=mysql_query($insert,$linkid);
-echo "Successfully posted!!!";
+$update="update post set POST='".htmlspecialchars($txtcompost)."' where UID='".$userid."' and POSTID='".$postid."'";
+$result_insert=mysql_query($update,$linkid);
+echo "Successfully Updated!!!";
 
 ?>

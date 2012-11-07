@@ -15,8 +15,9 @@ $(document).ready(function() {
 	var i;
 	var j;
 	for (i=1;i<=posttotal;i++)
-	{		
-		$('#comment_post'+i).css("display","none");   
+	{
+		$('#comment_post'+i).css("display","none");	  	
+		$('#editcomment_postcom'+i).css("display","none"); 
 		$('#like'+i).css("display","none"); 	  
 		$('#delete'+i).css("display","none"); 	  
 		//$('#share'+i).css("display","none"); 
@@ -24,7 +25,8 @@ $(document).ready(function() {
 	
 	for (j=1;j<=comtotal;j++)
 	{		
-		$('#comment_postcom'+j).css("display","none");   
+		$('#comment_postcom'+j).css("display","none"); 		
+		$('#editcomment_post'+j).css("display","none");    
 		$('#likecom'+j).css("display","none"); 	  
 		$('#deletecom'+j).css("display","none"); 	  
 		//$('#sharecom'+j).css("display","none"); 
@@ -39,7 +41,8 @@ function fnshow_hidediv(stringval)
 	var i;
 	for (i=1;i<=posttotal;i++)
 	{		
-		$('#comment_post'+i).css("display","none");   
+		$('#comment_post'+i).css("display","none");
+		$('#editcomment_postcom'+i).css("display","none");    
 		$('#like'+i).css("display","none"); 	  
 		$('#delete'+i).css("display","none"); 	  
 		//$('#share'+i).css("display","none"); 
@@ -55,17 +58,18 @@ function fnshow_hidedivcom(stringval)
 	var j;
 	for (j=1;j<=comtotal;j++)
 	{		
-		$('#comment_postcom'+j).css("display","none");    
+		$('#comment_postcom'+j).css("display","none"); 		
+		    
 		$('#likecom'+j).css("display","none"); 	  
 		$('#deletecom'+j).css("display","none"); 	  
 		//$('#sharecom'+j).css("display","none"); 
 		$('#'+stringval).css("display","block");
-	}
-	
+	}	
 }
 
 function fnsavecomments(userid,postid,txtid)
 {
+	
 	var post_value=jQuery.trim($('#'+txtid).val());
 	if (post_value != "" || post_value.match(/(\w+\s)*\w+[.?!]/) )
 	{
@@ -87,8 +91,7 @@ function fnsavecomments(userid,postid,txtid)
 }
 
 function fnprofdelete(user_id,post_id,string_val)
-{
-	
+{	
 	if (user_id != "" && post_id !="" && string_val == "Yes")
 	{
 		url='delete_profuser.php';
@@ -111,6 +114,97 @@ function fnprofdelete(user_id,post_id,string_val)
 	}
 }
 
+
+function fnupdatepost(userid,postid,txtid,action,id)
+{
+	var post_value=jQuery.trim($('#'+txtid).val());
+	if ((post_value != "" || post_value.match(/(\w+\s)*\w+[.?!]/)) && action == "update" )
+	{
+		url='update_userpost.php';
+		data=new Object();
+		data['txteditcompost']=$('#'+txtid).val();
+		data['user_id']=userid;
+		data['post_id']=postid;
+		$.ajax({
+		  type: 'POST', // type of request either Get or Post
+		  url: url, // Url of the page where to post data and receive response 
+		  data: data, // data to be post
+		  success: function(data){ 
+			 alert (data);
+		 	 $('#content_userpost').load('user_profile_post.php');	
+		  } //function to be called on successful reply from server
+		});
+	}
+	
+	if (action == "cancel")
+	{
+		$('#userpost'+id).css("display","block");
+		$('#editcomment_postcom'+id).css("display","none");
+	}
+}
+
+function fnshoweditdiv(stringval,id)
+{
+	$('#editcomment_postcom'+id).css("display","none");
+	$('#userpost'+id).css("display","none");
+	$('#'+stringval).css("display","block");
+}
+
+function fncomdeleteprof(userid,comid,postid)
+{	
+	if (userid != "" && comid != ""  && postid != "")
+	{
+		url='delete_usercomments.php';
+		data=new Object();
+		data['userid']=userid;
+		data['comid']=comid;		
+		data['postid']=postid;
+		$.ajax({
+		  type: 'POST', // type of request either Get or Post
+		  url: url, // Url of the page where to post data and receive response 
+		  data: data, // data to be post
+		  success: function(data){ 
+			 alert (data);
+		 	 $('#content_userpost').load('user_profile_post.php');	
+		  } //function to be called on successful reply from server
+		});
+	}
+}
+
+
+function fnshoweditdivcom(stringval,id)
+{
+	$('#editcomment_post'+id).css("display","none");	
+	$('#user_comments'+id).css("display","none");
+	$('#'+stringval).css("display","block");
+}
+
+function fnupdatecommentcom(usid,comid,txtid,action,id)
+{
+		var post_value=jQuery.trim($('#'+txtid).val());
+	if ((post_value != "" || post_value.match(/(\w+\s)*\w+[.?!]/)) && action == "update" )
+	{
+		url='update_usercommt.php';
+		data=new Object();
+		data['txteditcomcomment']=$('#'+txtid).val();
+		data['usid']=usid;
+		data['comid']=comid;
+		$.ajax({
+		  type: 'POST', // type of request either Get or Post
+		  url: url, // Url of the page where to post data and receive response 
+		  data: data, // data to be post
+		  success: function(data){ 
+			 alert (data);
+		 	 $('#content_userpost').load('user_profile_post.php');	
+		  } //function to be called on successful reply from server
+		});
+	}
+	if (action == "cancel")
+	{
+		$('#user_comments'+id).css("display","block");
+		$('#editcomment_post'+id).css("display","none");
+	}
+}
 </script>
 <?php
 
@@ -154,10 +248,22 @@ if ($num_select > 0)
 	?>
          <table width="100%" height="100%" cellpadding="0" cellspacing="0" id="tableborder" >
 	<tr>
-    <td width="15%"><input type="hidden" name="totalpost" id="totalpost" value="<?php echo $num_select; ?>" /></td><td width="85%"><b><?php echo $uname;?></b></td><td width="2%"><img src="../images/valid.png"  /></td>
+    <td width="15%"><input type="hidden" name="totalpost" id="totalpost" value="<?php echo $num_select; ?>" /></td><td width="85%"><b><?php echo $uname;?></b></td><td width="2%">   <a href="#" onclick="fnshoweditdiv('editcomment_postcom<?php echo $num_count; ?>','<?php echo $num_count; ?>'); return false">Edit</a></td>
     </tr>
     <tr>
-    <td valign="top"><img src="<?php echo $userphoto;?>"  width="60" height="60"  /></td><td colspan="2"><?php echo $post;?></td>
+    <td valign="top"><img src="<?php echo $userphoto;?>"  width="60" height="60"  /></td><td colspan="2">
+	<div id="userpost<?php echo $num_count;?>"><?php echo $post;?></div>
+     <div id="editcomment_postcom<?php echo $num_count; ?>">
+			<form method="post" action="#" 	>
+				<textarea rows="2"  cols="39" autofocus="autofocus"
+                name="txteditcompost<?php echo $num_count; ?>" id="txteditcompost<?php echo $num_count; ?>" ><?php echo $post; ?></textarea>
+				<input type="button" width="88" height="20"  value="Update" name="Submitcom" 
+                onclick="fnupdatepost('<?php echo $uid; ?>','<?php echo $postid; ?>','txteditcompost<?php echo $num_count;?>','update','<?php echo $num_count;?>'); return false;" />
+                <input type="button" name="cancel" value="Cancel" width="88" height="20" 
+                 onclick="fnupdatepost('<?php echo $uid; ?>','<?php echo $postid; ?>','txteditcompost<?php echo $num_count;?>','cancel','<?php echo $num_count;?>'); return false;"  />
+			</form>
+			</div>
+    </td>
     </tr>
     <?php
     //code for comments
@@ -191,13 +297,34 @@ if ($num_select > 0)
 			<tr>
 				<td>&nbsp;</td>
 				<td>
-				<table width="105%" height="100%" cellpadding="0" cellspacing="0" >
+				<table width="100%" height="100%" cellpadding="0" cellspacing="0" >
 					<tr>
-					  <td width="15%"><input type="hidden" name="totalcom" id="totalcom" value="<?php echo $num_rows_compost; ?>" /></td><td width="81%"><b><?php echo $cuname;?></b></td>
-					  <td width="4%">&nbsp;</td>
+					  <td width="12%"><input type="hidden" name="totalcom" id="totalcom" value="<?php echo $num_rows_compost; ?>" /></td><td width="68%"><b><?php echo $cuname;?></b></td>
+					  <td width="20%">
+                      <?php if ($comuid == $uid) { ?>
+                      <a href="#" onclick="fnshoweditdivcom('editcomment_post<?php echo $num_count; ?>','<?php echo $num_count; ?>'); return false" >Edit </a>&nbsp;&nbsp;
+                      <a href="#" onclick="fncomdeleteprof('<?php echo $uid; ?>','<?php echo $comid;?>','<?php echo $postid;?>'); return false;" >Delete</a>
+                      <?php } ?>
+                      </td>                      
 					</tr>
 					<tr>
-						<td valign="top"><img src="<?php echo $comuserphoto;?>"  width="60" height="60"  /></td><td colspan="2"><?php echo $ctext;?></td>
+						<td valign="top"><img src="<?php echo $comuserphoto;?>"  width="40" height="40"  /></td>
+                        <td colspan="2">
+                        <div id="user_comments"><?php echo $ctext;?></div>
+                      	  <?php if ($comuid == $uid) { ?>
+                        <div id="editcomment_post<?php echo $num_count; ?>" >
+                    <form method="post" action="#" 	>
+                        <textarea rows="2"  cols="35" autofocus="autofocus"
+                        name="txteditpost<?php echo $num_count; ?>" id="txteditpost<?php echo $num_count; ?>" ><?php echo $ctext; ?></textarea>
+                        <input type="button" width="88" height="20"  value="Update" name="Submitcom" 
+                        onclick="fnupdatecommentcom('<?php echo $uid; ?>','<?php echo $comid; ?>','txteditpost<?php echo $num_count;?>','update','<?php echo $num_count;?>'); return false;" />
+                        <input type="button" name="cancel" value="Cancel" width="88" height="20" 
+                         onclick="fnupdatecommentcom('<?php echo $uid; ?>','<?php echo $comid; ?>','txteditpost<?php echo $num_count;?>','cancel','<?php echo $num_count;?>'); return false;"  />
+                    </form>
+                    </div>
+                    <? }?>
+                        
+                    </td>
 					</tr>
 				</table>
 				</td>
@@ -206,10 +333,12 @@ if ($num_select > 0)
 			}
 		?>
 		<tr>
-			<td>&nbsp;</td><td colspan="2"><?php echo $post_timeval; ?> 
+			<td>&nbsp;</td>
+			<td colspan="2"><?php echo $post_timeval; ?> 
 		<!--<a href="#" onclick="fnshow_hidedivcom('likecom<?php // echo $num_count;?>'); return false">Like</a>-->.
 		<a href="#" onclick="fnshow_hidedivcom('comment_postcom<?php echo $num_count;  ?>'); return false">Comment</a>.
 		<!--<a href="#" onclick="fnshow_hidedivcom('sharecom<?php //echo $num_count; ?>'); return false">Share</a>.-->
+     
 		<a href="#" onclick="fnshow_hidedivcom('deletecom<?php echo $num_count; ?>'); return false">Delete</a> </td>
 			</tr>
 			<tr>   
@@ -221,6 +350,7 @@ if ($num_select > 0)
 				<input type="submit"   width="88" height="20"  value="post" name="Submitcom" />
 			</form>
 			</div>
+           
 			<!--<div id="likecom<?php //echo $num_count;  ?>">
 			Like
 			</div>
@@ -261,6 +391,7 @@ if ($num_select > 0)
 				<input type="submit"   width="88" height="20"  value="post" name="Submit" />
 			</form>
 			</div>
+     
 			<!--<div id="like<?php //echo $num_count; ?>">
 			Like
 			</div>

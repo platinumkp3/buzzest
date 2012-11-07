@@ -11,32 +11,33 @@ if(function_exists('date_default_timezone_set')) date_default_timezone_set($time
 $curtime=date('Y-m-d H:i:s');
 
 $data=$_POST;
-$user_id=$data['user_id'];
-$post_id=$data['post_id'];
+$usrid_val=$data['usrid_val'];
+$pst_id_val=$data['pst_id_val'];
 $action=$data['action'];
 
 if ($action == "save")
-{
-	$select="select * from share where POSTID='".$post_id."' and UID='".$user_id."'";
+{	
+	$select="select * from likes where POSTID='".$pst_id_val."' and UID='".$usrid_val."'";
 	$res_select=mysql_query($select,$linkid);
 	$num_res_select=mysql_num_rows($res_select);
 	if ($num_res_select == 0)
-	{
-		$insert_share="insert into share(POSTID,UID,SHDATE,SHTIME,SHSTATUS) values('".$post_id."','".$user_id."',
-		'".date('Y-m-d')."','".$curtime."','1')";
+	{	
+		$insert_share="insert into likes(POSTID,UID,LIKDATE,LIKTIME,LIKSTATUS) 
+		values('".$pst_id_val."','".$usrid_val."','".date('Y-m-d')."','".$curtime."','1')";
 		$res_insert_share=mysql_query($insert_share,$linkid);
-		echo "Successfully Shared!!!";
+		echo "Successfully Liked!!!";
 	}
 	else 
 	{
-		echo "Already Shared!!!";
+		echo "Already Liked!!!";
 	}
 }
 
 if ($action == "delete")
 {
-	$delete_share="delete from share where POSTID='".$post_id."' and UID='".$user_id."'";
+	$delete_share="delete from likes where POSTID='".$pst_id_val."' and UID='".$usrid_val."'";
 	$res_delete_share=mysql_query($delete_share,$linkid);
-	echo "Successfully UnShared!!!";
+	echo "Successfully Unliked!!!";
 }
+
 ?>
