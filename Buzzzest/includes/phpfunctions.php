@@ -19,7 +19,7 @@ function date_diffval($start, $end="NOW")
                 $presec = $pmin-$premin[0];
                 $sec = $presec*60;
                 
-                $timeshift = $premin[0].' min '.round($sec,0).' sec ago';
+                $timeshift = $premin[0].' min(s) '.round($sec,0).' sec(s) ago';
 
         } elseif($time>=3600 && $time<=86399) {
                 // Hours + Minutes
@@ -32,7 +32,7 @@ function date_diffval($start, $end="NOW")
                 $presec = '0.'.$min[1];
                 $sec = $presec*60;
 
-                $timeshift = $prehour[0].' hr\'s '.$min[0].' min '.round($sec,0).' sec ago';
+                $timeshift = $prehour[0].' hr(s) '.$min[0].' min(s) ago';
 
         } elseif($time>=86400 && $time<=2678399 ) {
                 // Days + Hours + Minutes
@@ -49,7 +49,7 @@ function date_diffval($start, $end="NOW")
                 $presec = '0.'.$min[1];
                 $sec = $presec*60;
                 
-                $timeshift = $preday[0].' day\'s ago';
+                $timeshift = $preday[0].' day(s) ago';
 
         }
 		elseif($time>=2678400 && $time <= 32140799) {
@@ -70,7 +70,7 @@ function date_diffval($start, $end="NOW")
                 $presec = '0.'.$min[1];
                 $sec = $presec*60;
                 
-                $timeshift = $premonth[0].' month\'s ago';
+                $timeshift = $premonth[0].' month(s) ago';
 
         }
 		elseif($time>=32140800) {
@@ -95,7 +95,7 @@ function date_diffval($start, $end="NOW")
                 $presec = '0.'.$min[1];
                 $sec = $presec*60;
                 
-                $timeshift = $preyear[0].' years ago';
+                $timeshift = $preyear[0].' year(s) ago';
 
         }
        return $timeshift;

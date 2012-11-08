@@ -52,7 +52,7 @@ function fnchangediv(stringval)
 	if (stringval == "blogs")
 	{			   
   		$('#profile_blog').css("display","block");	
-		$('#profile_blog').load('profile_blog.php');
+		$('#profile_blog').load('./blog/profile_blog.php');
 	}
    	
 	if (stringval == "qanda")
@@ -60,7 +60,7 @@ function fnchangediv(stringval)
   		$('#qanda').css("display","block");	
 		$('#qanda').load('profile_qanda.php');
 	}
-   $('#'+stringval).css("display","block");
+    $('#'+stringval).css("display","block");
 	
 }
 

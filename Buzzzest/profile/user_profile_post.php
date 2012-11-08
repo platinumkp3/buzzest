@@ -10,10 +10,13 @@ $linkid=db_connect();
 <script type="application/javascript">
 $(document).ready(function() {
 	var posttotal= $('#totalpost').val();
-	var comtotal=  $('#totalcom').val();
+	var comtotal=  $('#totalcom').val();	
+	
+	var commenttotal=  $('#totalcom').val();
 	comtotal=parseInt(comtotal, 10) + parseInt(posttotal, 10); //comtotal+posttotal
 	var i;
 	var j;
+	var k;
 	for (i=1;i<=posttotal;i++)
 	{
 		$('#comment_post'+i).css("display","none");	  	
@@ -25,8 +28,11 @@ $(document).ready(function() {
 	
 	for (j=1;j<=comtotal;j++)
 	{		
-		$('#comment_postcom'+j).css("display","none"); 		
-		$('#editcomment_post'+j).css("display","none");    
+		$('#comment_postcom'+j).css("display","none");			
+		for (k=1;k<=commenttotal;k++)
+		{
+			$('#'+j+'editcomment_post'+k).css("display","none");
+		}  
 		$('#likecom'+j).css("display","none"); 	  
 		$('#deletecom'+j).css("display","none"); 	  
 		//$('#sharecom'+j).css("display","none"); 
@@ -172,16 +178,16 @@ function fncomdeleteprof(userid,comid,postid)
 }
 
 
-function fnshoweditdivcom(stringval,id)
+function fnshoweditdivcom(stringval,id,psid)
 {
-	$('#editcomment_post'+id).css("display","none");	
-	$('#user_comments'+id).css("display","none");
+	$('#'+id+'editcomment_post'+psid).css("display","none");	
+	$('#'+id+'user_comments'+psid).css("display","none");
 	$('#'+stringval).css("display","block");
 }
 
-function fnupdatecommentcom(usid,comid,txtid,action,id)
+function fnupdatecommentcom(usid,comid,txtid,action,id,psid)
 {
-		var post_value=jQuery.trim($('#'+txtid).val());
+	var post_value=jQuery.trim($('#'+txtid).val());
 	if ((post_value != "" || post_value.match(/(\w+\s)*\w+[.?!]/)) && action == "update" )
 	{
 		url='update_usercommt.php';
@@ -201,8 +207,8 @@ function fnupdatecommentcom(usid,comid,txtid,action,id)
 	}
 	if (action == "cancel")
 	{
-		$('#user_comments'+id).css("display","block");
-		$('#editcomment_post'+id).css("display","none");
+		$('#'+id+'user_comments'+psid).css("display","block");
+		$('#'+id+'editcomment_post'+psid).css("display","none");
 	}
 }
 </script>
@@ -246,7 +252,7 @@ if ($num_select > 0)
 		$post_timeval =date_diffval($POSTTIME, $curtime);
 
 	?>
-         <table width="100%" height="100%" cellpadding="0" cellspacing="0" id="tableborder" >
+         <table width="100%" align="left" height="100%" cellpadding="0" cellspacing="0" id="tableborder" >
 	<tr>
     <td width="15%"><input type="hidden" name="totalpost" id="totalpost" value="<?php echo $num_select; ?>" /></td><td width="85%"><b><?php echo $uname;?></b></td><td width="2%">   <a href="#" onclick="fnshoweditdiv('editcomment_postcom<?php echo $num_count; ?>','<?php echo $num_count; ?>'); return false">Edit</a></td>
     </tr>
@@ -273,6 +279,7 @@ if ($num_select > 0)
 		
 		if($num_rows_compost > 0)
 		{	
+			$num_com_count=1;
 			while( $data_sel_com=mysql_fetch_array($res_sel_com))
 			{
 				$comid=$data_sel_com['CMTID'];
@@ -302,7 +309,7 @@ if ($num_select > 0)
 					  <td width="12%"><input type="hidden" name="totalcom" id="totalcom" value="<?php echo $num_rows_compost; ?>" /></td><td width="68%"><b><?php echo $cuname;?></b></td>
 					  <td width="20%">
                       <?php if ($comuid == $uid) { ?>
-                      <a href="#" onclick="fnshoweditdivcom('editcomment_post<?php echo $num_count; ?>','<?php echo $num_count; ?>'); return false" >Edit </a>&nbsp;&nbsp;
+                      <a href="#" onclick="fnshoweditdivcom('<?php echo $num_count; ?>editcomment_post<?php echo $num_com_count; ?>','<?php echo $num_count; ?>','<?php echo $num_com_count; ?>'); return false" >Edit </a>&nbsp;&nbsp;
                       <a href="#" onclick="fncomdeleteprof('<?php echo $uid; ?>','<?php echo $comid;?>','<?php echo $postid;?>'); return false;" >Delete</a>
                       <?php } ?>
                       </td>                      
@@ -310,16 +317,16 @@ if ($num_select > 0)
 					<tr>
 						<td valign="top"><img src="<?php echo $comuserphoto;?>"  width="40" height="40"  /></td>
                         <td colspan="2">
-                        <div id="user_comments"><?php echo $ctext;?></div>
+                        <div id="<?php echo $num_count;?>user_comments<?php echo $num_com_count; ?>"><?php echo $ctext;?></div>
                       	  <?php if ($comuid == $uid) { ?>
-                        <div id="editcomment_post<?php echo $num_count; ?>" >
+                        <div id="<?php echo $num_count;?>editcomment_post<?php echo $num_com_count; ?>" >
                     <form method="post" action="#" 	>
                         <textarea rows="2"  cols="35" autofocus="autofocus"
                         name="txteditpost<?php echo $num_count; ?>" id="txteditpost<?php echo $num_count; ?>" ><?php echo $ctext; ?></textarea>
                         <input type="button" width="88" height="20"  value="Update" name="Submitcom" 
-                        onclick="fnupdatecommentcom('<?php echo $uid; ?>','<?php echo $comid; ?>','txteditpost<?php echo $num_count;?>','update','<?php echo $num_count;?>'); return false;" />
+                        onclick="fnupdatecommentcom('<?php echo $uid; ?>','<?php echo $comid; ?>','txteditpost<?php echo $num_count;?>','update','<?php echo $num_count;?>','<?php echo $num_com_count;?>'); return false;" />
                         <input type="button" name="cancel" value="Cancel" width="88" height="20" 
-                         onclick="fnupdatecommentcom('<?php echo $uid; ?>','<?php echo $comid; ?>','txteditpost<?php echo $num_count;?>','cancel','<?php echo $num_count;?>'); return false;"  />
+                         onclick="fnupdatecommentcom('<?php echo $uid; ?>','<?php echo $comid; ?>','txteditpost<?php echo $num_count;?>','cancel','<?php echo $num_count;?>','<?php echo $num_com_count;?>'); return false;"  />
                     </form>
                     </div>
                     <? }?>
@@ -330,6 +337,7 @@ if ($num_select > 0)
 				</td>
 			</tr>
 		<?php
+			$num_com_count++;
 			}
 		?>
 		<tr>
