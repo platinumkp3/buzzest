@@ -64,8 +64,7 @@ function fnshow_hidedivcom(stringval)
 	var j;
 	for (j=1;j<=comtotal;j++)
 	{		
-		$('#comment_postcom'+j).css("display","none"); 		
-		    
+		$('#comment_postcom'+j).css("display","none");
 		$('#likecom'+j).css("display","none"); 	  
 		$('#deletecom'+j).css("display","none"); 	  
 		//$('#sharecom'+j).css("display","none"); 
@@ -245,6 +244,20 @@ if ($num_select > 0)
 			$userphoto="../images/humanicon.jpg";			
 		}
 		
+			//code for shares
+		$select_shared="select * from share where POSTID='".$postid."'";
+		$res_select_shared=mysql_query($select_shared,$linkid);
+		$num_select_shared=mysql_num_rows($res_select_shared);
+		
+		// end of shares
+		
+		// code for likes
+		$select_liked="select * from likes where POSTID='".$postid."'";
+		$res_select_liked=mysql_query($select_liked,$linkid);
+		$num_select_liked=mysql_num_rows($res_select_liked);
+	
+		//end of likes
+		
 		$timezone = "Asia/Calcutta";
 		if(function_exists('date_default_timezone_set')) date_default_timezone_set($timezone);
 		$curtime=date('Y-m-d H:i:s');
@@ -347,7 +360,8 @@ if ($num_select > 0)
 		<a href="#" onclick="fnshow_hidedivcom('comment_postcom<?php echo $num_count;  ?>'); return false">Comment</a>.
 		<!--<a href="#" onclick="fnshow_hidedivcom('sharecom<?php //echo $num_count; ?>'); return false">Share</a>.-->
      
-		<a href="#" onclick="fnshow_hidedivcom('deletecom<?php echo $num_count; ?>'); return false">Delete</a> </td>
+		<a href="#" onclick="fnshow_hidedivcom('deletecom<?php echo $num_count; ?>'); return false">Delete</a>&nbsp; <?php if ($num_select_liked > 0) { echo $num_select_liked." Likes"; }?> 
+  &nbsp; <?php if ($num_select_shared > 0) { echo $num_select_shared." Shares"; }?> </td>
 			</tr>
 			<tr>   
 			<td colspan="2"><div id="comment_postcom<?php echo $num_count; ?>">
@@ -388,7 +402,8 @@ if ($num_select > 0)
 			<!--<a href="#" onclick="fnshow_hidediv('like<?php //echo $num_count;  ?>'); return false">Like</a>.-->
 			<a href="#" onclick="fnshow_hidediv('comment_post<?php echo $num_count;  ?>'); return false">Comment</a>.
 			<!--<a href="#" onclick="fnshow_hidediv('share<?php //echo $num_count;  ?>'); return false">Share</a>.-->
-			<a href="#" onclick="fnshow_hidediv('delete<?php echo $num_count;  ?>'); return false">Delete</a> </td>
+			<a href="#" onclick="fnshow_hidediv('delete<?php echo $num_count;  ?>'); return false">Delete</a> &nbsp; <?php if ($num_select_liked > 0) { echo $num_select_liked." Likes"; }?> 
+  &nbsp; <?php if ($num_select_shared > 0) { echo $num_select_shared." Shares"; }?> </td>
 			</tr>
 			<tr>   
 			<td colspan="2"><div id="comment_post<?php echo $num_count; ?>">

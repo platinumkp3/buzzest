@@ -47,7 +47,7 @@ function fnsaveblog()
 	 && category_val != ""  && (blogtitle != "" || blogtitle.match(/(\w+\s)*\w+[.?!']/))
 	 && ( blogsummary != "" || blogsummary.match(/(\w+\s)*\w+[.?!']/) ) )
 	{
-		url='save_profileblog_story.php';
+		url='./blog/save_profileblog_story.php';
 		data=new Object();
 		data['editor1']=$('#editor1').val();
 		data['blogcategory']=$('#blogcategory').val();
@@ -59,7 +59,7 @@ function fnsaveblog()
 		  data: data, // data to be post
 		  success: function(data){ 
 			 alert (data);
-			$('#poststories').load('profile_blog.php #poststories');
+			$('#poststories').load('./blog/profile_blog.php #poststories');
 		 	// $('#content_userpost').load('save_profileblog_story.php');	
 		  } //function to be called on successful reply from server
 		});

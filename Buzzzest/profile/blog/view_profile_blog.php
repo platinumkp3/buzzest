@@ -11,9 +11,11 @@ $linkid=db_connect();
 $(document).ready(function() {
 	var postblogtotal= $('#totalpostblog').val();
 	var comblogtotal=  $('#totalcomblog').val();
+	var commenttotal=  $('#totalcomblog').val();
 	comblogtotal=parseInt(comblogtotal, 10) + parseInt(postblogtotal, 10);;
 	var i;
 	var j;
+	var k;
 	for (i=1;i<=postblogtotal;i++)
 	{		
 		$('#comment_postblog'+i).css("display","none"); 		  	
@@ -25,8 +27,11 @@ $(document).ready(function() {
 	
 	for (j=1;j<=comblogtotal;j++)
 	{		
-		$('#comment_postcomblog'+j).css("display","none");				  	
-		$('#editcomment_blog'+i).css("display","none");    
+		$('#comment_postcomblog'+j).css("display","none");;			
+		for (k=1;k<=commenttotal;k++)
+		{
+			$('#'+j+'editcomment_post'+k).css("display","none");
+		}  
 		$('#likecomblog'+j).css("display","none"); 	  
 		$('#deletecomblog'+j).css("display","none"); 	  
 		$('#sharecomblog'+j).css("display","none"); 
@@ -144,10 +149,11 @@ function fnshoweditdiv(stringval,id)
 	$('#'+stringval).css("display","block");
 }
 
-function fnshoweditdivcom(stringval,id)
+
+function fnshoweditdivcom(stringval,id,psid)
 {
-	$('#editcomment_blog'+id).css("display","none");	
-	$('#userblogcomment'+id).css("display","none");
+	$('#'+id+'editcomment_post'+psid).css("display","none");	
+	$('#'+id+'userblogcomment'+psid).css("display","none");
 	$('#'+stringval).css("display","block");
 }
 
@@ -188,6 +194,34 @@ function fnupdatepost(userid,postid,txtid,action,id,txt_title,txt_smry)
 		$('#editcomment_blogcom'+id).css("display","none");
 	}
 }
+
+function fnupdatecommentcom(usid,comid,txtid,action,id,psid)
+{
+	var post_value=jQuery.trim($('#'+txtid).val());
+	if ((post_value != "" || post_value.match(/(\w+\s)*\w+[.?!]/)) && action == "update" )
+	{
+		url='./blog/update_blogcommt.php';
+		data=new Object();
+		data['txteditpost']=$('#'+txtid).val();
+		data['usid']=usid;
+		data['comid']=comid;
+		$.ajax({
+		  type: 'POST', // type of request either Get or Post
+		  url: url, // Url of the page where to post data and receive response 
+		  data: data, // data to be post
+		  success: function(data){ 
+			 alert (data);
+		 	  $('#profile_blog_view').load('./blog/view_profile_blog.php');	
+		  } //function to be called on successful reply from server
+		});
+	}
+	if (action == "cancel")
+	{
+		$('#'+id+'userblogcomment'+psid).css("display","block");
+		$('#'+id+'editcomment_post'+psid).css("display","none");
+	}
+}
+
 
 </script>
 <div id="profile_blog_view">
@@ -311,6 +345,7 @@ if ($num_select > 0)
 		
 		if($num_rows_compost > 0)
 		{	
+			$num_com_count=1;
 			while( $data_sel_com=mysql_fetch_array($res_sel_com))
 			{
 				$blcomid=$data_sel_com['BLCMTID'];
@@ -339,20 +374,33 @@ if ($num_select > 0)
 					<tr>
 					  <td width="13%"><input type="hidden" name="totalcomblog" id="totalcomblog" value="<?php echo $num_rows_compost; ?>" /></td><td width="67%"><b><?php echo $cuname;?></b></td>
 					  <td width="20%"> <?php if ($blcomuid == $uid) { ?>
-                      <a href="#" onclick="fnshoweditdivcom('editcomment_blog<?php echo $num_count; ?>','<?php echo $num_count; ?>'); return false" >Edit </a>&nbsp;&nbsp;
-                      <a href="#" onclick="fncomdeleteprof('<?php echo $uid; ?>','<?php echo $blcomid;?>','<?php echo $blogid;?>'); return false;" >Delete</a>
+                      <a href="#" onclick="fnshoweditdivcom('<?php echo $num_count; ?>editcomment_post<?php echo $num_com_count; ?>','<?php echo $num_count; ?>','<?php echo $num_com_count; ?>'); return false" >Edit </a>&nbsp;&nbsp;
+                        <a href="#" onclick="fncomdeleteprof('<?php echo $uid; ?>','<?php echo $blcomid;?>','<?php echo $blogid;?>'); return false;" >Delete</a>
                       <?php } ?></td>
 					</tr>
 					<tr>
 						<td valign="top"><img src="<?php echo $comuserphoto;?>"  width="40" height="40"  /></td>
-						<td colspan="2"><div id="userblogcomment"><?php echo $blctext;?></div>
-                                                
+						<td colspan="2">
+                        <div id="<?php echo $num_count;?>userblogcomment<?php echo $num_com_count; ?>"><?php echo $blctext;?></div>
+                      	  <?php if ($blcomuid == $uid) { ?>
+                        <div id="<?php echo $num_count;?>editcomment_post<?php echo $num_com_count; ?>" >
+                    <form method="post" action="#" 	>
+                        <textarea rows="2"  cols="35" autofocus="autofocus"
+                        name="txteditpost<?php echo $num_count; ?>" id="txteditpost<?php echo $num_count; ?>" ><?php echo $blctext; ?></textarea>
+                        <input type="button" width="88" height="20"  value="Update" name="Submitcom" 
+                        onclick="fnupdatecommentcom('<?php echo $uid; ?>','<?php echo $blcomid; ?>','txteditpost<?php echo $num_count;?>','update','<?php echo $num_count;?>','<?php echo $num_com_count;?>'); return false;" />
+                        <input type="button" name="cancel" value="Cancel" width="88" height="20" 
+                         onclick="fnupdatecommentcom('<?php echo $uid; ?>','<?php echo $blcomid; ?>','txteditpost<?php echo $num_count;?>','cancel','<?php echo $num_count;?>','<?php echo $num_com_count;?>'); return false;"  />
+                    </form>
+                    </div>
+                    <? }?>               
                         </td>
 					</tr>
 				</table>
 				</td>
 			</tr>
 		<?php
+			$num_com_count++;
 			}
 		?>
 		<tr>

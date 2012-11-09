@@ -64,5 +64,4 @@ $del_post="delete from post where POSTID='".$post_id."'";
 $res_del_post=mysql_query($del_post,$linkid);
 
 echo "Successfully Deleted!!!";
-
 ?>
