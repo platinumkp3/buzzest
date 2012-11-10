@@ -267,7 +267,7 @@ if ($num_select > 0)
 	?>
          <table width="100%" align="left" height="100%" cellpadding="0" cellspacing="0" id="tableborder" >
 	<tr>
-    <td width="15%"><input type="hidden" name="totalpost" id="totalpost" value="<?php echo $num_select; ?>" /></td><td width="85%"><b><?php echo $uname;?></b></td><td width="2%">   <a href="#" onclick="fnshoweditdiv('editcomment_postcom<?php echo $num_count; ?>','<?php echo $num_count; ?>'); return false">Edit</a></td>
+    <td width="15%"><input type="hidden" name="totalpost" id="totalpost" value="<?php echo $num_select; ?>" /></td><td width="85%"><b><?php echo $uname;?></b></td><td width="2%"><a href="#" onclick="fnshoweditdiv('editcomment_postcom<?php echo $num_count; ?>','<?php echo $num_count; ?>'); return false">Edit</a></td>
     </tr>
     <tr>
     <td valign="top"><img src="<?php echo $userphoto;?>"  width="60" height="60"  /></td><td colspan="2">

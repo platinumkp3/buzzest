@@ -58,7 +58,7 @@ function fnchangediv(stringval)
 	if (stringval == "qanda")
 	{			   
   		$('#qanda').css("display","block");	
-		$('#qanda').load('profile_qanda.php');
+		$('#qanda').load('./qanda/profile_qanda.php');
 	}
     $('#'+stringval).css("display","block");
 	
