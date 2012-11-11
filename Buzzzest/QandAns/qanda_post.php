@@ -14,9 +14,11 @@ $(document).ready(function() {
 	
 	var posttotal= $('#totalpost_qanda').val();
 	var comtotal=  $('#totalblg_qanda').val();
+	var commenttotal=  $('#totalblg_qanda').val();
 	comtotal=parseInt(comtotal, 10) + parseInt(posttotal, 10); //comtotal+posttotal
 	var i;
 	var j;
+	var k;
 	for (i=1;i<=posttotal;i++)
 	{		
 		$('#comment_postqanda'+i).css("display","none"); 
@@ -25,7 +27,11 @@ $(document).ready(function() {
 	
 	for (j=1;j<=comtotal;j++)
 	{		
-		$('#comment_postqandacom'+j).css("display","none"); 
+		$('#comment_postqandacom'+j).css("display","none");						
+		for (k=1;k<=commenttotal;k++)
+		{
+			$('#'+j+'editcomment_qanda'+k).css("display","none");
+		}   
 		$('#deleteqandacom'+j).css("display","none"); 
 	}
 	
@@ -80,6 +86,7 @@ function fnsavecommentsqanda(userid,postid,txtid)
 	}
 }
 
+
 /*function fnprofdeleteqanda(user_id,post_id,string_val)
 {	
 	if (user_id != "" && post_id !="" && string_val == "Yes")
@@ -104,7 +111,6 @@ function fnsavecommentsqanda(userid,postid,txtid)
 	}
 }
 
-
 function fnprofshareqanda(usrid,pst_id,strval,action)
 {
 	if (usrid != "" && pst_id !="" && strval == "Yes" && action != "")
@@ -121,7 +127,7 @@ function fnprofshareqanda(usrid,pst_id,strval,action)
 		  data: data, // data to be post
 		  success: function(data){
 			 alert (data);
-		 	 $('#content_blog').load('blog_post.php');	
+		 	$('#content_qanda').load("qanda_post.php");  	
 		  } //function to be called on successful reply from server
 		});
 	}
@@ -144,12 +150,68 @@ function fnproflikeqanda(usrid_val,pst_id_val,str_value,action)
 		  data: data, // data to be post
 		  success: function(data){
 			 alert (data);
-		 	 $('#content_blog').load('blog_post.php');	
+		 	$('#content_qanda').load("qanda_post.php");  	
+		  } //function to be called on successful reply from server
+		});
+	}
+}*/
+
+
+function fnshoweditdivqanda(stringval,id)
+{
+	$('#editcomment_qanda'+id).css("display","none");
+	$('#userqandacomment'+id).css("display","none");
+	$('#'+stringval).css("display","block");
+}
+
+function fncomdeleteqanda(userid,comid,postid)
+{	
+	if (userid != "" && comid != ""  && postid != "")
+	{
+		url='delete_qacomments.php';
+		data=new Object();
+		data['userid']=userid;
+		data['comid']=comid;		
+		data['postid']=postid;
+		$.ajax({
+		  type: 'POST', // type of request either Get or Post
+		  url: url, // Url of the page where to post data and receive response 
+		  data: data, // data to be post
+		  success: function(data){ 
+			 alert (data);
+		 	$('#content_qanda').load("qanda_post.php");  	
 		  } //function to be called on successful reply from server
 		});
 	}
 }
-*/
+
+function fnupdatecommentqa(usid,comid,txtid,action,id,psid)
+{
+	var post_value=jQuery.trim($('#'+txtid).val());
+	if ((post_value != "" || post_value.match(/(\w+\s)*\w+[.?!]/)) && action == "update" )
+	{
+		url='update_qacomment.php';
+		data=new Object();
+		data['txteditpostqanda']=post_value;
+		data['usid']=usid;
+		data['comid']=comid;
+		$.ajax({
+		  type: 'POST', // type of request either Get or Post
+		  url: url, // Url of the page where to post data and receive response 
+		  data: data, // data to be post
+		  success: function(data){ 
+			 alert (data);
+		 	$('#content_qanda').load("qanda_post.php");  	
+		  } //function to be called on successful reply from server
+		});
+	}
+	if (action == "cancel")
+	{
+		$('#'+id+'userqandacomment'+psid).css("display","block");
+		$('#'+id+'editcomment_qanda'+psid).css("display","none");
+	}
+}
+
 </script>
 
 
@@ -261,7 +323,7 @@ if ($num_select > 0)
 	?>
          <table width="100%" height="100%" cellpadding="0" cellspacing="0" id="tableborder" >
 	<tr>
-    <td width="15%"><input type="hidden" name="totalpost_qanda" id="totalpost_qanda" value="<?php echo $num_select; ?>" /></td><td width="85%"><b><?php echo $user_name;?></b></td><td width="2%"><img src="../images/valid.png"  /></td>
+    <td width="15%"><input type="hidden" name="totalpost_qanda" id="totalpost_qanda" value="<?php echo $num_select; ?>" /></td><td width="85%"><b><?php echo $user_name;?></b></td><td width="2%"></td>
     </tr>
     <tr>
     <td valign="top"><img src="<?php echo $userphoto;?>"  width="60" height="60"  /></td><td colspan="2"><?php echo $QUESTION;?></td>
@@ -273,7 +335,8 @@ if ($num_select > 0)
 		$num_rows_compost=mysql_num_rows($res_sel_qanda);	
 		
 		if($num_rows_compost > 0)
-		{	
+		{
+			$num_com_count=1;	
 			while( $data_sel_qanda=mysql_fetch_array($res_sel_qanda))
 			{
 				$ANSID=$data_sel_qanda['ANSID'];
@@ -300,16 +363,36 @@ if ($num_select > 0)
 				<td>
 				<table width="105%" height="100%" cellpadding="0" cellspacing="0" >
 					<tr>
-					  <td width="15%"><input type="hidden" name="totalblg_qanda" id="totalblg_qanda" value="<?php echo $num_rows_compost; ?>" /></td><td width="81%"><b><?php echo $blguname;?></b></td>
-					  <td width="4%">&nbsp;</td>
+					  <td width="14%"><input type="hidden" name="totalblg_qanda" id="totalblg_qanda" value="<?php echo $num_rows_compost; ?>" /></td><td width="64%"><b><?php echo $blguname;?></b></td>
+					  <td width="22%"> <?php if ($ans_uid == $uid) { ?>
+                      <a href="#" onclick="fnshoweditdivqanda('<?php echo $num_count; ?>editcomment_qanda<?php echo $num_com_count; ?>','<?php echo $num_count; ?>','<?php echo $num_com_count; ?>'); return false" >Edit </a>&nbsp;&nbsp;
+                        <a href="#" onclick="fncomdeleteqanda('<?php echo $uid; ?>','<?php echo $ANSID;?>','<?php echo $QID;?>'); return false;" >Delete</a>
+                      <?php } ?></td>
 					</tr>
 					<tr>
-						<td valign="top"><img src="<?php echo $blguserphoto;?>"  width="60" height="60"  /></td><td colspan="2"><?php echo $ANSWER;?></td>
+						<td valign="top"><img src="<?php echo $blguserphoto;?>"  width="60" height="60"  /></td>
+						<td colspan="2">
+						 <div id="<?php echo $num_count;?>userqandacomment<?php echo $num_com_count; ?>"><?php echo $ANSWER;?></div>
+						 <?php if ($ans_uid == $uid) { ?>
+                        <div id="<?php echo $num_count;?>editcomment_qanda<?php echo $num_com_count; ?>" >
+                    <form method="post" action="#" 	>
+                        <textarea rows="2"  cols="35" autofocus="autofocus"
+                        name="txteditpostqanda<?php echo $num_count; ?>"
+						 id="txteditpostqanda<?php echo $num_count; ?>" ><?php echo $ANSWER; ?></textarea>
+                        <input type="button" width="88" height="20"  value="Update" name="Submitcom" 
+                        onclick="fnupdatecommentqa('<?php echo $uid; ?>','<?php echo $ANSID; ?>','txteditpostqanda<?php echo $num_count;?>','update','<?php echo $num_count;?>','<?php echo $num_com_count;?>'); return false;" />
+                        <input type="button" name="cancel" value="Cancel" width="88" height="20" 
+                         onclick="fnupdatecommentqa('<?php echo $uid; ?>','<?php echo $ANSID; ?>','txteditpostqanda<?php echo $num_count;?>','cancel','<?php echo $num_count;?>','<?php echo $num_com_count;?>'); return false;"  />
+                    </form>
+                    </div>
+                    <?php }?> 
+						 </td>
 					</tr>
 				</table>
 				</td>
 			</tr>
 		<?php
+			$num_com_count++;
 			}
 		?>
 		<tr>

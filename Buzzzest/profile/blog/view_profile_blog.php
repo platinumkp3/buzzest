@@ -27,7 +27,7 @@ $(document).ready(function() {
 	
 	for (j=1;j<=comblogtotal;j++)
 	{		
-		$('#comment_postcomblog'+j).css("display","none");;			
+		$('#comment_postcomblog'+j).css("display","none");			
 		for (k=1;k<=commenttotal;k++)
 		{
 			$('#'+j+'editcomment_post'+k).css("display","none");
@@ -157,7 +157,7 @@ function fnshoweditdivcom(stringval,id,psid)
 	$('#'+stringval).css("display","block");
 }
 
-function fnupdatepost(userid,postid,txtid,action,id,txt_title,txt_smry)
+function fnupdate_blog(userid,postid,txtid,action,id,txt_title,txt_smry)
 {
 	var post_value=jQuery.trim($('#'+txtid).val());
 	var post_title=jQuery.trim($('#'+txt_title).val());	
@@ -202,7 +202,7 @@ function fnupdatecommentcom(usid,comid,txtid,action,id,psid)
 	{
 		url='./blog/update_blogcommt.php';
 		data=new Object();
-		data['txteditpost']=$('#'+txtid).val();
+		data['txteditpostblog']=post_value;
 		data['usid']=usid;
 		data['comid']=comid;
 		$.ajax({
@@ -274,6 +274,20 @@ if ($num_select > 0)
 			$userphoto="../images/humanicon.jpg";			
 		}
 		
+					//code for shares
+		$select_shared="select * from share_blog where BLID='".$blogid."'";
+		$res_select_shared=mysql_query($select_shared,$linkid);
+		$num_select_shared=mysql_num_rows($res_select_shared);
+		
+		// end of shares
+		
+		// code for likes
+		$select_liked="select * from likes_blog where BLID='".$blogid."'";
+		$res_select_liked=mysql_query($select_liked,$linkid);
+		$num_select_liked=mysql_num_rows($res_select_liked);
+	
+		//end of likes
+		
 		$timezone = "Asia/Calcutta";
 		if(function_exists('date_default_timezone_set')) date_default_timezone_set($timezone);
 		$curtime=date('Y-m-d H:i:s');
@@ -317,13 +331,13 @@ if ($num_select > 0)
                  id="txteditcomblog<?php echo $num_count; ?>" ><?php echo $blog; ?></textarea>
                 <br />
                     <input type="button" width="88" height="20"  value="Update" name="Submitcom" 
-                    onclick="fnupdatepost('<?php echo $uid; ?>','<?php echo $blogid; ?>',
+                    onclick="fnupdate_blog('<?php echo $uid; ?>','<?php echo $blogid; ?>',
                     'txteditcomblog<?php echo $num_count;?>','update',
                     '<?php echo $num_count;?>','txteditblogsmry<?php echo $num_count; ?>',
                     'txteditblogtitle<?php echo $num_count; ?>'); return false;" />
                     
                     <input type="button" name="cancel" value="Cancel" width="88" height="20" 
-                     onclick="fnupdatepost('<?php echo $uid; ?>','<?php echo $blogid; ?>',
+                     onclick="fnupdate_blog('<?php echo $uid; ?>','<?php echo $blogid; ?>',
                      'txteditcomblog<?php echo $num_count;?>',
                      'cancel','<?php echo $num_count;?>',
                      'txteditblogsmry<?php echo $num_count; ?>',
@@ -386,14 +400,14 @@ if ($num_select > 0)
                         <div id="<?php echo $num_count;?>editcomment_post<?php echo $num_com_count; ?>" >
                     <form method="post" action="#" 	>
                         <textarea rows="2"  cols="35" autofocus="autofocus"
-                        name="txteditpost<?php echo $num_count; ?>" id="txteditpost<?php echo $num_count; ?>" ><?php echo $blctext; ?></textarea>
+                        name="txteditpostblog<?php echo $num_count; ?>" id="txteditpostblog<?php echo $num_count; ?>" ><?php echo $blctext; ?></textarea>
                         <input type="button" width="88" height="20"  value="Update" name="Submitcom" 
-                        onclick="fnupdatecommentcom('<?php echo $uid; ?>','<?php echo $blcomid; ?>','txteditpost<?php echo $num_count;?>','update','<?php echo $num_count;?>','<?php echo $num_com_count;?>'); return false;" />
+                        onclick="fnupdatecommentcom('<?php echo $uid; ?>','<?php echo $blcomid; ?>','txteditpostblog<?php echo $num_count;?>','update','<?php echo $num_count;?>','<?php echo $num_com_count;?>'); return false;" />
                         <input type="button" name="cancel" value="Cancel" width="88" height="20" 
-                         onclick="fnupdatecommentcom('<?php echo $uid; ?>','<?php echo $blcomid; ?>','txteditpost<?php echo $num_count;?>','cancel','<?php echo $num_count;?>','<?php echo $num_com_count;?>'); return false;"  />
+                         onclick="fnupdatecommentcom('<?php echo $uid; ?>','<?php echo $blcomid; ?>','txteditpostblog<?php echo $num_count;?>','cancel','<?php echo $num_count;?>','<?php echo $num_com_count;?>'); return false;"  />
                     </form>
                     </div>
-                    <? }?>               
+                    <?php }?>               
                         </td>
 					</tr>
 				</table>
@@ -411,7 +425,8 @@ if ($num_select > 0)
             onclick="fnshow_hidedivcom('comment_postcomblog<?php echo $num_count;  ?>'); return false">Comment</a>.
 			<!--<a href="#" 
             onclick="fnshow_hidedivcom('sharecomblog<?php //echo $num_count; ?>'); return false">Share</a>-->
-			<a href="#" onclick="fnshow_hidedivcom('deletecomblog<?php echo $num_count; ?>'); return false">delete</a> </td>
+			<a href="#" onclick="fnshow_hidedivcom('deletecomblog<?php echo $num_count; ?>'); return false">Delete</a>&nbsp; <?php if ($num_select_liked > 0) { echo $num_select_liked." Likes"; }?> 
+  &nbsp; <?php if ($num_select_shared > 0) { echo $num_select_shared." Shares"; }?> </td>
 			</tr>
 			<tr>   
 			<td colspan="2"><div id="comment_postcomblog<?php echo $num_count; ?>">
@@ -450,7 +465,8 @@ if ($num_select > 0)
 			<!--<a href="#" onclick="fnshow_hidediv('likeblog<?php //echo $num_count;  ?>'); return false">like</a>.-->
 			<a href="#" onclick="fnshow_hidediv('comment_postblog<?php echo $num_count;  ?>'); return false">Comment</a>.
 			<!--<a href="#" onclick="fnshow_hidediv('shareblog<?php //echo $num_count;  ?>'); return false">Share</a>.-->
-			<a href="#" onclick="fnshow_hidediv('deleteblog<?php echo $num_count;  ?>'); return false">delete</a> </td>
+			<a href="#" onclick="fnshow_hidediv('deleteblog<?php echo $num_count;  ?>'); return false">Delete</a>&nbsp; <?php if ($num_select_liked > 0) { echo $num_select_liked." Likes"; }?> 
+  &nbsp; <?php if ($num_select_shared > 0) { echo $num_select_shared." Shares"; }?> </td>
 			</tr>
 			<tr>   
 			<td colspan="2"><div id="comment_postblog<?php echo $num_count; ?>">

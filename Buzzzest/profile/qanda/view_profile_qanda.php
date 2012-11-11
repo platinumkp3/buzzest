@@ -28,7 +28,11 @@ $(document).ready(function() {
 	
 	for (j=1;j<=comqatotal;j++)
 	{		
-		$('#comment_postcomqanda'+j).css("display","none"); 
+		$('#comment_postcomqanda'+j).css("display","none"); 				
+		for (k=1;k<=commenttotal;k++)
+		{
+			$('#'+j+'editcomment_postqanda'+k).css("display","none");
+		}  
 		$('#likecomqanda'+j).css("display","none"); 	  
 		$('#deletecomqanda'+j).css("display","none"); 	  
 		$('#shareqandablog'+j).css("display","none"); 
@@ -91,8 +95,7 @@ function fnsavecommentsqa(userid,postid,txtid)
 
 
 function fnqandadelete(user_id,post_id,string_val)
-{
-	
+{	
 	if (user_id != "" && post_id !="" && string_val == "Yes")
 	{
 		url='./qanda/delete_qandauser.php';
@@ -115,7 +118,7 @@ function fnqandadelete(user_id,post_id,string_val)
 	}
 }
 
-function fnshoweditdiv(stringval,id)
+function fnshoweditdivqanda(stringval,id)
 {
 	$('#editcomment_qandacom'+id).css("display","none");
 	$('#userqanda'+id).css("display","none");
@@ -123,16 +126,17 @@ function fnshoweditdiv(stringval,id)
 }
 
 
-function fnupdatepost(userid,postid,txtid,action,id)
+function fnupdate_qanda(userid_val,postid_val,txtid_val,action_val,id_val)
 {
-	var post_value=jQuery.trim($('#'+txtid).val());
-	if ((post_value != "" || post_value.match(/(\w+\s)*\w+[.?!]/)) && action == "update" )
+	var post_value=jQuery.trim($('#'+txtid_val).val());
+	
+	if ((post_value != "" || post_value.match(/(\w+\s)*\w+[.?!]/)) && action_val == "update" )
 	{
-		url='update_userqanda.php';
+		url='./qanda/update_userqanda.php';
 		data=new Object();
-		data['txteditcompost']=$('#'+txtid).val();
-		data['user_id']=userid;
-		data['post_id']=postid;
+		data['txteditcomqandaval']=post_value;
+		data['user_id']=userid_val;
+		data['post_id']=postid_val;
 		$.ajax({
 		  type: 'POST', // type of request either Get or Post
 		  url: url, // Url of the page where to post data and receive response 
@@ -144,12 +148,70 @@ function fnupdatepost(userid,postid,txtid,action,id)
 		});
 	}
 	
-	if (action == "cancel")
+	if (action_val == "cancel")
 	{
-		$('#userqanda'+id).css("display","block");
-		$('#editcomment_qandacom'+id).css("display","none");
+		$('#userqanda'+id_val).css("display","block");
+		$('#editcomment_qandacom'+id_val).css("display","none");
 	}
 }
+
+
+function fnshoweditdivqanda(stringval,id,psid)
+{
+	$('#'+id+'editcomment_postqanda'+psid).css("display","none");	
+	$('#'+id+'userqandacomment'+psid).css("display","none");
+	$('#'+stringval).css("display","block");
+}
+
+function fnupdatecommentqanda(usid,comid,txtid,action,id,psid)
+{
+	var post_value=jQuery.trim($('#'+txtid).val());
+	if ((post_value != "" || post_value.match(/(\w+\s)*\w+[.?!]/)) && action == "update" )
+	{
+		url='./qanda/update_qandacomment.php';
+		data=new Object();
+		data['txteditpostqanda']=post_value;
+		data['usid']=usid;
+		data['comid']=comid;
+		$.ajax({
+		  type: 'POST', // type of request either Get or Post
+		  url: url, // Url of the page where to post data and receive response 
+		  data: data, // data to be post
+		  success: function(data){ 
+			 alert (data);
+		 	  $('#profile_blog_view').load('./qanda/view_profile_qanda.php');	
+		  } //function to be called on successful reply from server
+		});
+	}
+	if (action == "cancel")
+	{
+		$('#'+id+'userqandacomment'+psid).css("display","block");
+		$('#'+id+'editcomment_postqanda'+psid).css("display","none");
+	}
+}
+
+
+function fncomdeleteqanda(userid,comid,postid)
+{	
+	if (userid != "" && comid != ""  && postid != "")
+	{
+		url='./qanda/delete_qandacomments.php';
+		data=new Object();
+		data['userid']=userid;
+		data['comid']=comid;		
+		data['postid']=postid;
+		$.ajax({
+		  type: 'POST', // type of request either Get or Post
+		  url: url, // Url of the page where to post data and receive response 
+		  data: data, // data to be post
+		  success: function(data){ 
+			 alert (data);
+		 	   $('#profile_blog_view').load('./qanda/view_profile_qanda.php');	
+		  } //function to be called on successful reply from server
+		});
+	}
+}
+
 
 </script>
 <div id="profile_blog_view">
@@ -209,7 +271,8 @@ if ($num_select > 0)
          <table width="100%" height="100%" cellpadding="0" cellspacing="0" id="tableborder" >
 	<tr>
     <td width="15%"><input type="hidden" name="totalpostqanda" id="totalpostqanda" value="<?php echo $num_select; ?>" /></td><td width="85%"><b><?php echo $uname;?></b></td><td width="2%">
-    <a href="#" onclick="fnshoweditdiv('editcomment_qandacom<?php echo $num_count; ?>','<?php echo $num_count; ?>'); return false">Edit</a></td>
+    <a href="#"
+	 onclick="fnshoweditdivqanda('editcomment_qandacom<?php echo $num_count; ?>','<?php echo $num_count; ?>'); return false;" >Edit</a></td>
     </tr>
     <tr>
     <td valign="top"><img src="<?php echo $userphoto;?>"  width="60" height="60"  /></td>
@@ -217,11 +280,11 @@ if ($num_select > 0)
     <div id="editcomment_qandacom<?php echo $num_count; ?>">
 			<form method="post" action="#" 	>
 				<textarea rows="2"  cols="39" autofocus="autofocus"
-                name="txteditcompost<?php echo $num_count; ?>" id="txteditcompost<?php echo $num_count; ?>" ><?php echo $QUESTION; ?></textarea>
+                name="txteditcomqandaval<?php echo $num_count; ?>" id="txteditcomqandaval<?php echo $num_count; ?>" ><?php echo $QUESTION; ?></textarea>
 				<input type="button" width="88" height="20"  value="Update" name="Submitcom" 
-                onclick="fnupdatepost('<?php echo $uid; ?>','<?php echo $postid; ?>','txteditcompost<?php echo $num_count;?>','update','<?php echo $num_count;?>'); return false;" />
+                onclick="fnupdate_qanda('<?php echo $uid; ?>','<?php echo $QID; ?>','txteditcomqandaval<?php echo $num_count;?>','update','<?php echo $num_count;?>'); return false;" />
                 <input type="button" name="cancel" value="Cancel" width="88" height="20" 
-                 onclick="fnupdatepost('<?php echo $uid; ?>','<?php echo $postid; ?>','txteditcompost<?php echo $num_count;?>','cancel','<?php echo $num_count;?>'); return false;"  />
+                 onclick="fnupdate_qanda('<?php echo $uid; ?>','<?php echo $QID; ?>','txteditcomqandaval<?php echo $num_count;?>','cancel','<?php echo $num_count;?>'); return false;"  />
 			</form>
 			</div>
     
@@ -235,6 +298,7 @@ if ($num_select > 0)
 		
 		if($num_rows_compost > 0)
 		{	
+			$num_com_count=1;
 			while( $data_sel_com=mysql_fetch_array($res_sel_com))
 			{
 				$ANSID=$data_sel_com['ANSID'];
@@ -261,17 +325,36 @@ if ($num_select > 0)
 				<td>
 				<table width="105%" height="100%" cellpadding="0" cellspacing="0" >
 					<tr>
-					  <td width="15%"><input type="hidden" name="totalcomqanda" id="totalcomqanda" value="<?php echo $num_rows_compost; ?>" /></td><td width="81%"><b><?php echo $cuname;?></b></td>
-					  <td width="4%">&nbsp;</td>
+					  <td width="13%"><input type="hidden" name="totalcomqanda" id="totalcomqanda" value="<?php echo $num_rows_compost; ?>" /></td><td width="65%"><b><?php echo $cuname;?></b></td>
+					  <td width="22%"> <?php if ($ansuid == $uid) { ?>
+                      <a href="#" onclick="fnshoweditdivqanda('<?php echo $num_count; ?>editcomment_postqanda<?php echo $num_com_count; ?>','<?php echo $num_count; ?>','<?php echo $num_com_count; ?>'); return false" >Edit </a>&nbsp;&nbsp;
+                        <a href="#" onclick="fncomdeleteqanda('<?php echo $uid; ?>','<?php echo $ANSID;?>','<?php echo $QID;?>'); return false;" >Delete</a>
+                      <?php } ?></td>
 					</tr>
 					<tr>
-						<td valign="top"><img src="<?php echo $comuserphoto;?>"  width="60" height="60"  /></td>
-						<td colspan="2"><?php echo $ANSWER;?></td>
+						<td valign="top"><img src="<?php echo $comuserphoto;?>"  width="40" height="40"  /></td>
+						<td colspan="2">
+						 <div id="<?php echo $num_count;?>userqandacomment<?php echo $num_com_count; ?>"><?php echo $ANSWER;?></div>
+						 <?php if ($ansuid == $uid) { ?>
+                        <div id="<?php echo $num_count;?>editcomment_postqanda<?php echo $num_com_count; ?>" >
+                    <form method="post" action="#" 	>
+                        <textarea rows="2"  cols="35" autofocus="autofocus"
+                        name="txteditpostqanda<?php echo $num_count; ?>"
+						 id="txteditpostqanda<?php echo $num_count; ?>" ><?php echo $ANSWER; ?></textarea>
+                        <input type="button" width="88" height="20"  value="Update" name="Submitcom" 
+                        onclick="fnupdatecommentqanda('<?php echo $uid; ?>','<?php echo $ANSID; ?>','txteditpostqanda<?php echo $num_count;?>','update','<?php echo $num_count;?>','<?php echo $num_com_count;?>'); return false;" />
+                        <input type="button" name="cancel" value="Cancel" width="88" height="20" 
+                         onclick="fnupdatecommentqanda('<?php echo $uid; ?>','<?php echo $ANSID; ?>','txteditpostqanda<?php echo $num_count;?>','cancel','<?php echo $num_count;?>','<?php echo $num_com_count;?>'); return false;"  />
+                    </form>
+                    </div>
+                    <?php }?> 
+						</td>
 					</tr>
 				</table>
 				</td>
 			</tr>
 		<?php
+			$num_com_count++;
 			}
 		?>
 		<tr>
@@ -281,10 +364,10 @@ if ($num_select > 0)
 			<a href="#" 
             onclick="fnshow_qahidedivcom('comment_postcomqanda<?php echo $num_count;  ?>'); return false">Comment</a>.
 			<!--<a href="#" onclick="fnshow_qahidedivcom('shareqandablog<?php //echo $num_count; ?>'); return false">Share</a>-->
-			<a href="#" onclick="fnshow_qahidedivcom('deletecomqanda<?php echo $num_count; ?>'); return false">delete</a> </td>
+			<a href="#" onclick="fnshow_qahidedivcom('deletecomqanda<?php echo $num_count; ?>'); return false">Delete</a> </td>
 			</tr>
 			<tr>   
-			<td colspan="2"><div id="comment_postcomqanda<?php echo $QID; ?>">
+			<td colspan="2"><div id="comment_postcomqanda<?php echo $num_count; ?>">
 			<form method="post" action="#" 
 			onsubmit="fnsavecommentsqa('<?php echo $uid; ?>','<?php echo $QID; ?>','txtqacompost<?php echo $num_count;?>'); return false;">
 				<textarea rows="2"   cols="39" autofocus="autofocus" name="txtqacompost<?php echo $num_count; ?>" id="txtqacompost<?php echo $num_count; ?>" > </textarea>
@@ -322,7 +405,7 @@ if ($num_select > 0)
 			<a href="#" onclick="fnshow_qahidediv('comment_postqanda<?php echo $num_count; ?>'); return false">Comment</a>.
 			<!--<a href="#" 
             onclick="fnshow_qahidediv('shareqanda<?php //echo $num_count;  ?>'); return false">Share</a>.-->
-			<a href="#" onclick="fnshow_qahidediv('deleteqanda<?php echo $num_count;  ?>'); return false">delete</a> </td>
+			<a href="#" onclick="fnshow_qahidediv('deleteqanda<?php echo $num_count;  ?>'); return false">Delete</a> </td>
 			</tr>
 			<tr>   
 			<td colspan="2"><div id="comment_postqanda<?php echo $num_count; ?>">

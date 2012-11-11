@@ -14,9 +14,12 @@ $(document).ready(function() {
 	
 	var posttotal= $('#totalpost_blog').val();
 	var comtotal=  $('#totalblg_blog').val();
+	
+	var commenttotal=  $('#totalblg_blog').val();
 	comtotal=parseInt(comtotal, 10) + parseInt(posttotal, 10); //comtotal+posttotal
 	var i;
 	var j;
+	var k;
 	for (i=1;i<=posttotal;i++)
 	{		
 		$('#comment_postblog'+i).css("display","none"); 
@@ -25,7 +28,11 @@ $(document).ready(function() {
 	
 	for (j=1;j<=comtotal;j++)
 	{		
-		$('#comment_postblogcom'+j).css("display","none"); 
+		$('#comment_postblogcom'+j).css("display","none");
+		for (k=1;k<=commenttotal;k++)
+		{
+			$('#'+j+'editcomment_post'+k).css("display","none");
+		}  
 		$('#deleteblogcom'+j).css("display","none"); 
 	}
 	
@@ -150,6 +157,61 @@ function fnproflikeblog(usrid_val,pst_id_val,str_value,action)
 	}
 }
 
+function fnupdatecommentcom(usid,comid,txtid,action,id,psid)
+{
+	var post_value=jQuery.trim($('#'+txtid).val());
+	if ((post_value != "" || post_value.match(/(\w+\s)*\w+[.?!]/)) && action == "update" )
+	{
+		url='update_blgcomment.php';
+		data=new Object();
+		data['txteditpostblog']=post_value;
+		data['usid']=usid;
+		data['comid']=comid;
+		$.ajax({
+		  type: 'POST', // type of request either Get or Post
+		  url: url, // Url of the page where to post data and receive response 
+		  data: data, // data to be post
+		  success: function(data){ 
+			 alert (data);
+		 	  $('#content_blog').load('blog_post.php');	
+		  } //function to be called on successful reply from server
+		});
+	}
+	if (action == "cancel")
+	{
+		$('#'+id+'userblogcomment'+psid).css("display","block");
+		$('#'+id+'editcomment_post'+psid).css("display","none");
+	}
+}
+
+function fncomdeleteprof(userid,comid,postid)
+{	
+	if (userid != "" && comid != ""  && postid != "")
+	{
+		url='delete_blgcomments.php';
+		data=new Object();
+		data['userid']=userid;
+		data['comid']=comid;		
+		data['postid']=postid;
+		$.ajax({
+		  type: 'POST', // type of request either Get or Post
+		  url: url, // Url of the page where to post data and receive response 
+		  data: data, // data to be post
+		  success: function(data){ 
+			 alert (data);
+		 	  $('#content_blog').load('blog_post.php');	
+		  } //function to be called on successful reply from server
+		});
+	}
+}
+
+function fnshoweditdivcom(stringval,id,psid)
+{
+	$('#'+id+'editcomment_post'+psid).css("display","none");	
+	$('#'+id+'userblogcomment'+psid).css("display","none");
+	$('#'+stringval).css("display","block");
+}
+
 </script>
 
 
@@ -249,7 +311,7 @@ if ($num_select > 0)
 	?>
          <table width="100%" height="100%" cellpadding="0" cellspacing="0" id="tableborder" >
 	<tr>
-    <td width="15%"><input type="hidden" name="totalpost_blog" id="totalpost_blog" value="<?php echo $num_select; ?>" /></td><td width="85%"><b><?php echo $user_name;?></b></td><td width="2%"><img src="../images/valid.png"  /></td>
+    <td width="15%"><input type="hidden" name="totalpost_blog" id="totalpost_blog" value="<?php echo $num_select; ?>" /></td><td width="85%"><b><?php echo $user_name;?></b></td><td width="2%">&nbsp;</td>
     </tr>
     <tr>
     <td valign="top"><img src="<?php echo $userphoto;?>"  width="60" height="60"  /></td><td colspan="2"><?php echo $BLTEXT;?></td>
@@ -262,6 +324,7 @@ if ($num_select > 0)
 		
 		if($num_rows_compost > 0)
 		{	
+			$num_com_count=1;
 			while( $data_sel_blog=mysql_fetch_array($res_sel_blog))
 			{
 				$BLCMTID=$data_sel_blog['BLCMTID'];
@@ -288,16 +351,35 @@ if ($num_select > 0)
 				<td>
 				<table width="105%" height="100%" cellpadding="0" cellspacing="0" >
 					<tr>
-					  <td width="15%"><input type="hidden" name="totalblg_blog" id="totalblg_blog" value="<?php echo $num_rows_compost; ?>" /></td><td width="81%"><b><?php echo $blguname;?></b></td>
-					  <td width="4%">&nbsp;</td>
+					  <td width="12%"><input type="hidden" name="totalblg_blog" id="totalblg_blog" value="<?php echo $num_rows_compost; ?>" /></td><td width="66%"><b><?php echo $blguname;?></b></td>
+					  <td width="22%"> <?php if ($blguid == $uid) { ?>
+                      <a href="#" onclick="fnshoweditdivcom('<?php echo $num_count; ?>editcomment_post<?php echo $num_com_count; ?>','<?php echo $num_count; ?>','<?php echo $num_com_count; ?>'); return false" >Edit </a>&nbsp;&nbsp;
+                        <a href="#" onclick="fncomdeleteprof('<?php echo $uid; ?>','<?php echo $BLCMTID;?>','<?php echo $BLID;?>'); return false;" >Delete</a>
+                      <?php } ?></td>
 					</tr>
 					<tr>
-						<td valign="top"><img src="<?php echo $blguserphoto;?>"  width="60" height="60"  /></td><td colspan="2"><?php echo $BLCTEXT;?></td>
+						<td valign="top"><img src="<?php echo $blguserphoto;?>"  width="60" height="60"  /></td>
+						<td colspan="2">
+						<div id="<?php echo $num_count;?>userblogcomment<?php echo $num_com_count; ?>"><?php echo $BLCTEXT;?></div>
+                      	  <?php if ($blguid == $uid) { ?>
+                        <div id="<?php echo $num_count;?>editcomment_post<?php echo $num_com_count; ?>" >
+                    <form method="post" action="#" 	>
+                        <textarea rows="2"  cols="35" autofocus="autofocus"
+                        name="txteditpostblog<?php echo $num_count; ?>" id="txteditpostblog<?php echo $num_count; ?>" ><?php echo $BLCTEXT; ?></textarea>
+                        <input type="button" width="88" height="20"  value="Update" name="Submitcom" 
+                        onclick="fnupdatecommentcom('<?php echo $uid; ?>','<?php echo $BLCMTID; ?>','txteditpostblog<?php echo $num_count;?>','update','<?php echo $num_count;?>','<?php echo $num_com_count;?>'); return false;" />
+                        <input type="button" name="cancel" value="Cancel" width="88" height="20" 
+                         onclick="fnupdatecommentcom('<?php echo $uid; ?>','<?php echo $BLCMTID; ?>','txteditpostblog<?php echo $num_count;?>','cancel','<?php echo $num_count;?>','<?php echo $num_com_count;?>'); return false;"  />
+                    </form>
+                    </div>
+                    <?php }?>             
+						</td>
 					</tr>
 				</table>
 				</td>
 			</tr>
 		<?php
+			$num_com_count++;
 			}
 		?>
 		<tr>

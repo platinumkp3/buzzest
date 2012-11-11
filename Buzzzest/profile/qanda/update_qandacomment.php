@@ -12,12 +12,11 @@ if(function_exists('date_default_timezone_set')) date_default_timezone_set($time
 $curtime=date('Y-m-d H:i:s');
 
 $data=$_POST;
-$userid=$data['user_id'];
-$postid=$data['post_id'];
-$txtcompost=$data['txteditcomqandaval'];
+$userid=$data['usid'];
+$postid=$data['comid'];
+$txtcompost=$data['txteditpostqanda'];
 
-$update="update querstions set QUESTION='".htmlspecialchars($txtcompost)."' where UID='".$userid."' and QID='".$postid."'";
-$result_insert=mysql_query($update,$linkid);
+$update="update answers set ANSWER='".htmlspecialchars($txtcompost)."' where UID='".$userid."' and ANSID='".$postid."'";
+$result_update=mysql_query($update,$linkid);
 echo "Successfully Updated!!!";
-
 ?>

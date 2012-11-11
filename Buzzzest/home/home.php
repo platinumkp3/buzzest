@@ -137,6 +137,7 @@ list
         <!--<div class="suggestionList" id="suggestionsList"> &nbsp; </div>-->
         <br />
         <div class="suggestionListphotos" id="suggestionListphotos"> </div>
+		
       </div>
    </div>
 </form>
