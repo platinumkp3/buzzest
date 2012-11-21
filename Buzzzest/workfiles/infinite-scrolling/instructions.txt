@@ -1,0 +1,9 @@
+How to Use the Demo
+=================================
+
+1. Open index.php file and data.php and provide your database details
+2. Import the sql file given in the project folder to your database
+3. Confgiure the page size in each place it is used. (Default value is 12)
+4. Change the positioning of messages according to your requirements and run the demo
+
+Good Luck.

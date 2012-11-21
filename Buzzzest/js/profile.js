@@ -1,24 +1,26 @@
 // JavaScript Document
 $(document).ready(function() {
-   $('#photos').hide("");	
-   $('#blogs').hide("");	
-   $('#info').hide("");	
-   $('#qanda').hide("");	
-   $('#infoeditdis').hide("");
+	  window.scrollTo(0,0);	
+   $('#photos').hide();	
+   $('#blogs').hide();	
+   $('#info').hide();	
+   $('#qanda').hide();	
+   $('#infoeditdis').hide();
    $("#photos").css("display","none");
    $("#blogs").css("display","none");
    $("#info").css("display","none");
    $("#qanda").css("display","none");   
-   $('#profile_blog').hide("");	
-   $('#viewstories').hide("");	
+   $('#profile_blog').hide();	
+   $('#viewstories').hide();	
    $('#infoeditdis').css("display","none");
    $('#popup-wrapper').css("display","none"); 
    $('#profile_blog').css("display","none");   
    $('#viewstories').css("display","none"); 
-   $('#content_userpost').load('user_profile_post.php');
-   
+   $('#content_userpost').load('user_profile_post.php'); 
  });
- 
+
+
+   
 function fnchangediv(stringval) 
 {
 	$('#photos').hide("");	

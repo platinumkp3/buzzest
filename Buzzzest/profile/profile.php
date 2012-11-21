@@ -102,7 +102,7 @@ $friends_count=$data_sel_friends['CNT'];
       </div>
    </form>
 	<div id="content_userpost">
-    </div>
+
    </div> <!-- end of .content_post /update link-->
 
 <div id="blogs"> <!-- start of .blogs -->
@@ -204,6 +204,7 @@ if ($num_info > 0)
 </div>
 
   <!-- end .content --></div>
+  </div>
 <?php
 require "../includes/footer.php";
 ?>

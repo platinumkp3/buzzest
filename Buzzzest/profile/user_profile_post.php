@@ -6,8 +6,42 @@ include "../includes/check_session.php";
 include "../db/common_db.php";
 require "../includes/phpfunctions.php";
 $linkid=db_connect();
+
+$row_object = mysql_query("select count(*) as rowcount from post where UID='".$uid."' and PSTATUS=1 order by POSTID DESC ");
+$row_object = mysql_fetch_object($row_object);
+$actual_row_count = $row_object->rowcount;
+
 ?>
+
+ <style>
+        
+	    #more{
+			background: none repeat scroll 0 0 #EEEEEE;
+			border: 1px solid #CFCFCF;
+			color: #000000;
+			display: none;
+			font-weight: bold;
+			left: 1100px;
+			padding: 5px;
+			position: fixed;
+			top: 100px;
+
+	    }
+	    #no-more{
+			background: none repeat scroll 0 0 #EEEEEE;
+			border: 1px solid #CFCFCF;
+			color: #000000;
+			display: none;
+			font-weight: bold;
+			left: 1100px;
+			padding: 5px;
+			position: fixed;
+			top: 100px;
+
+	    }
+        </style>
 <script type="application/javascript">
+var page = 1;
 $(document).ready(function() {
 	var posttotal= $('#totalpost').val();
 	var comtotal=  $('#totalcom').val();	
@@ -38,6 +72,8 @@ $(document).ready(function() {
 		//$('#sharecom'+j).css("display","none"); 
 	}
 	
+	
+	window.scroll(0,0);
 	
 });
 
@@ -73,8 +109,7 @@ function fnshow_hidedivcom(stringval)
 }
 
 function fnsavecomments(userid,postid,txtid)
-{
-	
+{	
 	var post_value=jQuery.trim($('#'+txtid).val());
 	if (post_value != "" || post_value.match(/(\w+\s)*\w+[.?!]/) )
 	{
@@ -210,10 +245,60 @@ function fnupdatecommentcom(usid,comid,txtid,action,id,psid)
 		$('#'+id+'editcomment_post'+psid).css("display","none");
 	}
 }
-</script>
+
+$(window).scroll(function () {
+	 var page = 1;
+	$('#more').hide();
+	$('#no-more').hide();
+	
+	if($(window).scrollTop() + $(window).height() > $(document).height() - 200) {
+		$('#more').css("top","100");
+		$('#more').show();
+	}
+	
+	if($(window).scrollTop() + $(window).height() >= $(document).height()) {		
+		
+		$('#more').hide();
+		$('#no-more').hide();
+		
+		page++;
+		alert(page);
+				
+		var data = {
+			page_num: page
+		};
+	
+		
+		var actual_count = "<?php echo $actual_row_count; ?>";
+		
+		if((page-1)* 3 > actual_count ){
+			
+			$('#no-more').css("top","400");
+			$('#no-more').show();
+		}else{
+			
+			$.ajax({
+				type: "POST",
+				url: "data_user_profile_post.php",
+				data:data,
+				success: function(res) {
+					$("#result").append(res);
+					console.log(res);
+					window.scroll(100,200);
+				}
+			});
+		}
+ }
+
+
+});
+
+
+      </script>
+
 <?php
 
-$select="select POSTID,POST,UID,POSTDATE,POSTTIME from post where UID='".$uid."' and PSTATUS=1 order by POSTID DESC";
+echo $select="select POSTID,POST,UID,POSTDATE,POSTTIME from post where UID='".$uid."' and PSTATUS=1 order by POSTID DESC limit 3";
 //code for home page
 /*$select="select POSTID,POST,UID from post where UID in(select FRNID from friends 
 		where UID='".$uid."' ) or UID='".$uid."' and PSTATUS=1 order by POSTID desc";*/
@@ -221,10 +306,17 @@ $res_select=mysql_query($select,$linkid);
 $num_select=mysql_num_rows($res_select);
 
 if ($num_select > 0)
-{
+{ 
+?>
+ <div id='more' >Loading More Content</div>
+        <div id='no-more' >No More Content</div>
+        <div id='result'>
+	<?php
 	$num_count=1;
 	while($data_select=mysql_fetch_array($res_select))
-	{
+	{ ?>
+	
+           <?php
 		$post=$data_select['POST'];
 		$postid=$data_select['POSTID'];
 		$POSTDATE=$data_select['POSTDATE'];
@@ -265,6 +357,7 @@ if ($num_select > 0)
 		$post_timeval =date_diffval($POSTTIME, $curtime);
 
 	?>
+     
          <table width="100%" align="left" height="100%" cellpadding="0" cellspacing="0" id="tableborder" >
 	<tr>
     <td width="15%"><input type="hidden" name="totalpost" id="totalpost" value="<?php echo $num_select; ?>" /></td><td width="85%"><b><?php echo $uname;?></b></td><td width="2%"><a href="#" onclick="fnshoweditdiv('editcomment_postcom<?php echo $num_count; ?>','<?php echo $num_count; ?>'); return false">Edit</a></td>
@@ -437,7 +530,12 @@ if ($num_select > 0)
 </table>
 		
 <?php	
- $num_count++;			
-	}
+ $num_count++;
+ 			
+	} 
+	?>
+    </div>
+    <?
+	
 }
-?>
+ ?>
