@@ -83,8 +83,6 @@ function suggest(inputString){
 				$('#country').removeClass('load');
 			}
 		});
-		
-		
 	}
 }
 

@@ -31,7 +31,9 @@ $queryString=$_POST['queryString'];
 			{
 				$userphoto="../images/humanicon.jpg";
 			}
-			echo '<li style="list-style-type:none;" onClick="fill(\''.$username.'\');"><img src="'.$userphoto.'" width="60" height="60" /></li>';
+			echo '<li style="list-style-type:none;" onClick="fill(\''.$username.'\');">
+			<table><tr><td><img src="'.$userphoto.'" width="60" height="60" /></td></tr>
+			<tr><td>'.$username.'</td></tr></table></li>';
 			if ($count % 4 == 0)
 			{
 				echo '<ul>';
@@ -45,6 +47,5 @@ $queryString=$_POST['queryString'];
 			echo 'OOPS we had a problem :(';
 		}
 	}
-} 
-	
+} 	
 ?>
